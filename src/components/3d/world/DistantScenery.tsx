@@ -151,9 +151,9 @@ export const DistantScenery: React.FC<DistantSceneryProps> = ({ curve }) => {
       >
         <boxGeometry args={[1, 1, 1]} />
         <meshStandardMaterial
-          color="#0c101c"
-          roughness={0.4}
-          metalness={0.88}
+          color="#1e293b"
+          roughness={0.65}
+          metalness={0.25}
         />
       </instancedMesh>
 
@@ -181,9 +181,9 @@ export const DistantScenery: React.FC<DistantSceneryProps> = ({ curve }) => {
       >
         <cylinderGeometry args={[0.3, 1.2, 1, 6]} />
         <meshStandardMaterial
-          color="#111726"
-          roughness={0.5}
-          metalness={0.8}
+          color="#263449"
+          roughness={0.6}
+          metalness={0.3}
         />
       </instancedMesh>
 
@@ -207,7 +207,7 @@ export const DistantScenery: React.FC<DistantSceneryProps> = ({ curve }) => {
         {/* Horizontal Truss Span */}
         <mesh position={[0, 0, 0]} castShadow>
           <boxGeometry args={[75, 1.2, 2.4]} />
-          <meshStandardMaterial color="#090d16" roughness={0.35} metalness={0.9} />
+          <meshStandardMaterial color="#1e283a" roughness={0.65} metalness={0.35} />
         </mesh>
         {/* Underside Telemetry Luminaire */}
         <mesh position={[0, -0.65, 0]}>
@@ -217,12 +217,12 @@ export const DistantScenery: React.FC<DistantSceneryProps> = ({ curve }) => {
         {/* Left Canyon Anchor Column */}
         <mesh position={[-36, -7, 0]} castShadow>
           <boxGeometry args={[2.0, 14, 2.4]} />
-          <meshStandardMaterial color="#070a12" roughness={0.4} metalness={0.85} />
+          <meshStandardMaterial color="#1b2434" roughness={0.7} metalness={0.3} />
         </mesh>
         {/* Right Canyon Anchor Column */}
         <mesh position={[36, -7, 0]} castShadow>
           <boxGeometry args={[2.0, 14, 2.4]} />
-          <meshStandardMaterial color="#070a12" roughness={0.4} metalness={0.85} />
+          <meshStandardMaterial color="#1b2434" roughness={0.7} metalness={0.3} />
         </mesh>
       </group>
 
@@ -231,7 +231,7 @@ export const DistantScenery: React.FC<DistantSceneryProps> = ({ curve }) => {
         {/* Horizontal Truss Span */}
         <mesh position={[0, 0, 0]} castShadow>
           <boxGeometry args={[85, 1.4, 2.8]} />
-          <meshStandardMaterial color="#090d16" roughness={0.35} metalness={0.9} />
+          <meshStandardMaterial color="#1e283a" roughness={0.65} metalness={0.35} />
         </mesh>
         {/* Underside Telemetry Luminaire */}
         <mesh position={[0, -0.75, 0]}>
@@ -241,12 +241,12 @@ export const DistantScenery: React.FC<DistantSceneryProps> = ({ curve }) => {
         {/* Left Canyon Anchor Column */}
         <mesh position={[-41, -8, 0]} castShadow>
           <boxGeometry args={[2.4, 16, 2.8]} />
-          <meshStandardMaterial color="#070a12" roughness={0.4} metalness={0.85} />
+          <meshStandardMaterial color="#1b2434" roughness={0.7} metalness={0.3} />
         </mesh>
         {/* Right Canyon Anchor Column */}
         <mesh position={[41, -8, 0]} castShadow>
           <boxGeometry args={[2.4, 16, 2.8]} />
-          <meshStandardMaterial color="#070a12" roughness={0.4} metalness={0.85} />
+          <meshStandardMaterial color="#1b2434" roughness={0.7} metalness={0.3} />
         </mesh>
       </group>
     </group>

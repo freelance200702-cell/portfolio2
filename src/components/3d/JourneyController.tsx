@@ -149,6 +149,27 @@ export const JourneyController: React.FC<JourneyControllerProps> = ({
       .clone()
       .addScaledVector(lookAheadFrame.normal, eyeElevation * 0.95);
 
+    // Virtual Director: Soft landmark framing glance as visitor approaches exhibits
+    let nearestPlacement: ProjectPlacement | null = null;
+    let minDistanceT = Infinity;
+
+    for (const p of projectPlacements) {
+      const dt = Math.abs(clampedT - p.t);
+      if (dt < minDistanceT) {
+        minDistanceT = dt;
+        nearestPlacement = p;
+      }
+    }
+
+    if (nearestPlacement && minDistanceT < 0.04) {
+      // Gentle cinematic glance (up to 40% blend towards landmark focal center)
+      const glanceWeight = Math.cos((minDistanceT / 0.04) * (Math.PI / 2)) * 0.4;
+      const landmarkFocalPoint = nearestPlacement.position
+        .clone()
+        .add(new THREE.Vector3(0, 1.6, 0));
+      lookTarget.lerp(landmarkFocalPoint, glanceWeight);
+    }
+
     targetCamPos.current.copy(cameraPosition);
     targetLookAt.current.copy(lookTarget);
 

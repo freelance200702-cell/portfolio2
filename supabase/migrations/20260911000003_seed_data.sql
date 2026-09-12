@@ -314,34 +314,34 @@ ON CONFLICT DO NOTHING;
 
 -- 4. SEED PROJECT MEDIA (Gallery)
 INSERT INTO public.project_media (project_id, type, url, caption, sort_order, is_hero)
-SELECT p.id, 'image', 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80', 'Full spectral path-traced caustics and multi-bounce diffuse global illumination', 0, true
+SELECT p.id, 'image'::media_type, 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80', 'Full spectral path-traced caustics and multi-bounce diffuse global illumination', 0, true
 FROM public.projects p WHERE p.slug = 'aether-engine'
 UNION ALL
-SELECT p.id, 'image', 'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=1200&q=80', 'Two-level BVH spatial partitioning hierarchy visualization showing leaf clusters', 1, false
+SELECT p.id, 'image'::media_type, 'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=1200&q=80', 'Two-level BVH spatial partitioning hierarchy visualization showing leaf clusters', 1, false
 FROM public.projects p WHERE p.slug = 'aether-engine'
 UNION ALL
-SELECT p.id, 'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4', 'Real-time ray tracing walkthrough running at native 1440p', 2, false
+SELECT p.id, 'video'::media_type, 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4', 'Real-time ray tracing walkthrough running at native 1440p', 2, false
 FROM public.projects p WHERE p.slug = 'aether-engine'
 UNION ALL
-SELECT p.id, 'image', 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1200&q=80', 'Distributed GPU memory topology and cross-node ring-reduce interconnects', 0, true
+SELECT p.id, 'image'::media_type, 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1200&q=80', 'Distributed GPU memory topology and cross-node ring-reduce interconnects', 0, true
 FROM public.projects p WHERE p.slug = 'synapsenet'
 UNION ALL
-SELECT p.id, 'image', 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80', 'Token latency benchmarks showing linear scaling across 32 H100 SXM nodes', 1, false
+SELECT p.id, 'image'::media_type, 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80', 'Token latency benchmarks showing linear scaling across 32 H100 SXM nodes', 1, false
 FROM public.projects p WHERE p.slug = 'synapsenet'
 UNION ALL
-SELECT p.id, 'image', 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80', 'Kernel space vs user space capability boundary memory architecture diagram', 0, true
+SELECT p.id, 'image'::media_type, 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80', 'Kernel space vs user space capability boundary memory architecture diagram', 0, true
 FROM public.projects p WHERE p.slug = 'chronos-os'
 UNION ALL
-SELECT p.id, 'image', 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80', 'Chronos boot sequence and serial console driver executing in QEMU emulator', 1, false
+SELECT p.id, 'image'::media_type, 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80', 'Chronos boot sequence and serial console driver executing in QEMU emulator', 1, false
 FROM public.projects p WHERE p.slug = 'chronos-os'
 UNION ALL
-SELECT p.id, 'image', 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80', 'Real-time procedural planetary terrain rendered via compute shader dual contouring', 0, true
+SELECT p.id, 'image'::media_type, 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80', 'Real-time procedural planetary terrain rendered via compute shader dual contouring', 0, true
 FROM public.projects p WHERE p.slug = 'voxelworld'
 UNION ALL
-SELECT p.id, 'image', 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80', 'High-frequency telemetry pipeline architecture and LSM partition compaction tree', 0, true
+SELECT p.id, 'image'::media_type, 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80', 'High-frequency telemetry pipeline architecture and LSM partition compaction tree', 0, true
 FROM public.projects p WHERE p.slug = 'hyperion'
 UNION ALL
-SELECT p.id, 'image', 'https://images.unsplash.com/photo-1507499739999-097706ad8914?auto=format&fit=crop&w=1200&q=80', 'Volumetric radiance field reconstruction displaying continuous novel viewpoints', 0, true
+SELECT p.id, 'image'::media_type, 'https://images.unsplash.com/photo-1507499739999-097706ad8914?auto=format&fit=crop&w=1200&q=80', 'Volumetric radiance field reconstruction displaying continuous novel viewpoints', 0, true
 FROM public.projects p WHERE p.slug = 'opticmesh';
 
 -- 5. SEED DEFAULT PORTFOLIO SETTINGS

@@ -254,37 +254,37 @@ export const PhysicalRoadbed: React.FC<PhysicalRoadbedProps> = ({
         <meshStandardMaterial
           map={diffuseMap}
           roughnessMap={roughnessMap}
-          color="#161c28"
-          roughness={0.72}
-          metalness={0.25}
-          bumpScale={0.03}
+          color="#18202e"
+          roughness={0.86}
+          metalness={0.08}
+          bumpScale={0.02}
         />
       </mesh>
 
       {/* 2. Left Precast Architectural Curb */}
       <mesh geometry={leftCurbGeom} receiveShadow castShadow>
         <meshStandardMaterial
-          color="#2a3346"
-          roughness={0.65}
-          metalness={0.4}
+          color="#283344"
+          roughness={0.82}
+          metalness={0.1}
         />
       </mesh>
 
       {/* 3. Right Precast Architectural Curb */}
       <mesh geometry={rightCurbGeom} receiveShadow castShadow>
         <meshStandardMaterial
-          color="#2a3346"
-          roughness={0.65}
-          metalness={0.4}
+          color="#283344"
+          roughness={0.82}
+          metalness={0.1}
         />
       </mesh>
 
       {/* 4. Structural Under-Deck Box Girder (Deep cast shadows and physical depth) */}
       <mesh geometry={keelGeometry} receiveShadow castShadow>
         <meshStandardMaterial
-          color="#0b0e16"
-          roughness={0.8}
-          metalness={0.5}
+          color="#0d121c"
+          roughness={0.9}
+          metalness={0.15}
         />
       </mesh>
     </group>

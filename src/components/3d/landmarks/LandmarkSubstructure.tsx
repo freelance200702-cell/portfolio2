@@ -1,34 +1,9 @@
 import React, { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Text, Image } from '@react-three/drei';
+import { Text } from '@react-three/drei';
 import * as THREE from 'three';
 import type { Project } from '@/types/project';
 import type { LandmarkVisualState } from './LandmarkTypes';
-import { JETBRAINS_MONO_FONT } from '@/constants/assets';
-
-/**
- * Resilient error boundary to safeguard R3F from broken image assets
- */
-class ThumbnailErrorBoundary extends React.Component<
-  { children: React.ReactNode },
-  { hasError: boolean }
-> {
-  state = { hasError: false };
-  static getDerivedStateFromError() {
-    return { hasError: true };
-  }
-  override render() {
-    if (this.state.hasError) {
-      return (
-        <mesh position={[0, 0, 0.02]}>
-          <planeGeometry args={[3.0, 1.6]} />
-          <meshBasicMaterial color="#0c101c" />
-        </mesh>
-      );
-    }
-    return this.props.children;
-  }
-}
 
 interface LandmarkSubstructureProps {
   project: Project;
@@ -61,112 +36,108 @@ export const LandmarkSubstructure: React.FC<LandmarkSubstructureProps> = ({
   onHover,
   children,
 }) => {
-  const beaconRef = useRef<THREE.Mesh>(null);
-  const dossierRef = useRef<THREE.Group>(null);
-  const dossierOpacityRef = useRef(0);
+  const plaqueRef = useRef<THREE.Group>(null);
+  const plaqueOpacityRef = useRef(0);
 
   const primaryColor = project.node_color_primary || '#38bdf8';
-  const secondaryColor = project.node_color_secondary || '#0284c7';
   const indexStr = useMemo(() => `0${index + 1}`.slice(-2), [index]);
 
   useFrame((_, delta) => {
-    // 1. Collimated Skyward Beacon (Visible from meaningful distance)
-    if (beaconRef.current) {
-      const mat = beaconRef.current.material as THREE.MeshBasicMaterial;
-      if (mat) {
-        // Beacon is visible at distance (idle: 0.06), brightens on approach/focus/selected
-        const targetOpacity = isSelected ? 0.28 : isFocused ? 0.20 : state === 'approaching' ? 0.12 : 0.05;
-        mat.opacity = THREE.MathUtils.damp(mat.opacity, targetOpacity, 3.5, delta);
-      }
-      const targetScale = isFocused ? 1.3 : 1.0;
-      beaconRef.current.scale.set(targetScale, 1, targetScale);
-    }
-
-    // 2. Dossier Viewport Fade Transition
-    const targetDossierOpacity = isFocused || isSelected ? 1.0 : state === 'approaching' ? 0.4 : 0.0;
-    dossierOpacityRef.current = THREE.MathUtils.damp(
-      dossierOpacityRef.current,
-      targetDossierOpacity,
+    // Plaque & Signage Smooth Proximity Fade
+    const targetPlaqueOpacity = isFocused || isSelected ? 1.0 : state === 'approaching' ? 0.7 : 0.25;
+    plaqueOpacityRef.current = THREE.MathUtils.damp(
+      plaqueOpacityRef.current,
+      targetPlaqueOpacity,
       4.0,
       delta
     );
 
-    if (dossierRef.current) {
-      dossierRef.current.visible = dossierOpacityRef.current > 0.02;
-      const scale = 0.85 + dossierOpacityRef.current * 0.15;
-      dossierRef.current.scale.setScalar(scale);
+    if (plaqueRef.current) {
+      plaqueRef.current.position.y = THREE.MathUtils.damp(
+        plaqueRef.current.position.y,
+        hovered ? 0.42 : 0.38,
+        5.0,
+        delta
+      );
     }
   });
 
   return (
     <group>
-      {/* 1. Deep Sub-Terrain Footing (Extending down to planetary bedrock at y = -0.6) */}
-      <mesh position={[0, -0.9, 0]} receiveShadow>
-        <cylinderGeometry args={[2.7, 3.2, 1.8, 24]} />
+      {/* 1. Deep Sub-Terrain Footing (Massive architectural pylon anchored deep into bedrock) */}
+      <mesh position={[0, -3.0, 0]} receiveShadow>
+        <cylinderGeometry args={[2.7, 3.8, 6.0, 24]} />
         <meshStandardMaterial
-          color="#050810"
-          roughness={0.7}
-          metalness={0.5}
+          color="#0d1420"
+          roughness={0.82}
+          metalness={0.15}
         />
       </mesh>
 
-      {/* 2. Terraced Cantilevered Approach Plaza (Multi-tier heavy slab) */}
+      {/* 1b. Broad Stepped Bedrock Foundation Plinth (Visibly grounds pedestal to terrain) */}
+      <mesh position={[0, -2.1, 0]} receiveShadow>
+        <cylinderGeometry args={[3.8, 4.6, 0.6, 20]} />
+        <meshStandardMaterial
+          color="#111826"
+          roughness={0.85}
+          metalness={0.12}
+        />
+      </mesh>
+
+      {/* 1c. Subtle Ground Footing Illumination Wash */}
+      <pointLight
+        position={[0, -0.5, 0]}
+        color={primaryColor}
+        intensity={state === 'idle' ? 0.4 : 0.9}
+        distance={7.5}
+        decay={2}
+      />
+
+      {/* 2. Terraced Architectural Exhibition Plaza Deck */}
       <group position={[0, -0.12, 0]}>
         {/* Foundation Deck Slabs */}
         <mesh position={[0, 0, 0]} receiveShadow castShadow>
           <cylinderGeometry args={[2.5, 2.7, 0.35, 32]} />
           <meshStandardMaterial
-            color="#080b14"
-            roughness={0.35}
-            metalness={0.88}
+            color="#111724"
+            roughness={0.8}
+            metalness={0.15}
           />
         </mesh>
 
-        {/* Recessed Circumferential Light Seam */}
+        {/* Recessed Circumferential Light Accent */}
         <mesh position={[0, 0.19, 0]}>
-          <torusGeometry args={[2.3, 0.02, 16, 64]} />
+          <torusGeometry args={[2.3, 0.015, 16, 64]} />
           <meshStandardMaterial
             color={primaryColor}
             emissive={primaryColor}
-            emissiveIntensity={state === 'idle' ? 0.3 : 1.2}
-            roughness={0.2}
+            emissiveIntensity={state === 'idle' ? 0.15 : 0.45}
+            roughness={0.4}
           />
         </mesh>
 
-        {/* Upper Finished Plaza Deck */}
+        {/* Upper Finished Gallery Terrace Deck */}
         <mesh position={[0, 0.25, 0]} receiveShadow>
           <cylinderGeometry args={[2.2, 2.3, 0.16, 32]} />
           <meshStandardMaterial
-            color="#0d111d"
-            roughness={0.3}
-            metalness={0.85}
+            color="#141c2c"
+            roughness={0.75}
+            metalness={0.15}
           />
         </mesh>
 
-        {/* Observation Perimeter Guardrail (h = 0.72m scale cue) */}
-        <mesh position={[0, 0.68, 0]}>
-          <torusGeometry args={[2.22, 0.016, 8, 48, Math.PI * 1.5]} />
+        {/* Observation Edge Chamfer Bead */}
+        <mesh position={[0, 0.34, 0]}>
+          <torusGeometry args={[2.22, 0.012, 8, 48, Math.PI * 1.5]} />
           <meshStandardMaterial
-            color="#475569"
-            roughness={0.25}
-            metalness={0.9}
+            color="#334155"
+            roughness={0.5}
+            metalness={0.4}
           />
         </mesh>
       </group>
 
-      {/* 3. Collimated Skyward Pillar Beacon (Visible across entire canyon highway) */}
-      <mesh ref={beaconRef} position={[0, 16, 0]}>
-        <cylinderGeometry args={[0.08, 0.3, 32, 16]} />
-        <meshBasicMaterial
-          color={primaryColor}
-          transparent
-          opacity={0.05}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-        />
-      </mesh>
-
-      {/* 4. Interactive Landmark Visual Archetype Content */}
+      {/* 3. Interactive Landmark 3D Archetype Sculpture */}
       <group
         onClick={(e) => {
           e.stopPropagation();
@@ -185,28 +156,29 @@ export const LandmarkSubstructure: React.FC<LandmarkSubstructureProps> = ({
         {children}
       </group>
 
-      {/* 5. Architectural Milestone Signage (Floating above installation) */}
-      <group position={[0, 4.4, 0]}>
+      {/* 4. Elegant Architectural Exhibition Signage (Floating above installation with dignified typography) */}
+      <group position={[0, 4.3, 0]}>
         <Text
-          position={[0, 0.32, 0]}
-          fontSize={0.13}
+          position={[0, 0.28, 0]}
+          fontSize={0.12}
           color={primaryColor}
           anchorX="center"
           anchorY="middle"
-          font={JETBRAINS_MONO_FONT}
+          letterSpacing={0.12}
         >
-          {`[ DESTINATION // ${indexStr} ]`}
+          {`${indexStr}  ·  EXHIBIT`}
         </Text>
         <Text
-          position={[0, 0.05, 0]}
-          fontSize={0.26}
+          position={[0, 0.02, 0]}
+          fontSize={0.24}
           color="#f8fafc"
           anchorX="center"
           anchorY="middle"
-          maxWidth={5.2}
+          maxWidth={4.8}
           textAlign="center"
+          letterSpacing={0.02}
         >
-          {project.title.toUpperCase()}
+          {project.title}
         </Text>
         <Text
           position={[0, -0.22, 0]}
@@ -214,102 +186,82 @@ export const LandmarkSubstructure: React.FC<LandmarkSubstructureProps> = ({
           color="#94a3b8"
           anchorX="center"
           anchorY="middle"
-          font={JETBRAINS_MONO_FONT}
+          letterSpacing={0.05}
         >
-          {`// ${project.category.toUpperCase()} • ${project.year || '2026'}`}
+          {`${project.category.replace(/_/g, ' ')}  ·  ${project.year || '2026'}`}
         </Text>
       </group>
 
-      {/* 6. Cinematic Dossier Viewfinder & Engagement Plaque */}
-      <group ref={dossierRef} position={[0, 0.8, 2.2]}>
-        {/* Backing Frame */}
-        <mesh position={[0, 0, -0.02]}>
-          <planeGeometry args={[3.2, 1.8]} />
+      {/* 5. Angled Exhibition Pedestal Plaque (Low-profile museum podium in front, preserving sightlines) */}
+      <group
+        ref={plaqueRef}
+        position={[0, 0.38, 2.05]}
+        rotation={[-Math.PI / 6, 0, 0]}
+        onClick={(e) => {
+          e.stopPropagation();
+          onSelect();
+        }}
+        onPointerOver={(e) => {
+          e.stopPropagation();
+          onHover(true);
+          document.body.style.cursor = 'pointer';
+        }}
+        onPointerOut={() => {
+          onHover(false);
+          document.body.style.cursor = 'auto';
+        }}
+      >
+        {/* Plaque Base Pedestal */}
+        <mesh position={[0, -0.15, -0.05]} castShadow>
+          <boxGeometry args={[0.3, 0.3, 0.1]} />
+          <meshStandardMaterial color="#0b1018" roughness={0.8} />
+        </mesh>
+
+        {/* Plaque Backplate */}
+        <mesh castShadow receiveShadow>
+          <boxGeometry args={[1.7, 0.52, 0.03]} />
           <meshStandardMaterial
-            color="#04060b"
-            roughness={0.2}
-            metalness={0.9}
-            transparent
-            opacity={0.94}
+            color={hovered ? '#1a2336' : '#0e1422'}
+            roughness={0.6}
+            metalness={0.2}
           />
         </mesh>
 
-        {/* Viewfinder Outer Wire Border */}
-        <mesh position={[0, 0, -0.01]}>
-          <planeGeometry args={[3.25, 1.85]} />
+        {/* Subtle Frame Highlight */}
+        <mesh position={[0, 0, 0.016]}>
+          <planeGeometry args={[1.66, 0.48]} />
           <meshBasicMaterial
-            color={secondaryColor}
+            color={hovered ? primaryColor : '#1e293b'}
             wireframe
             transparent
-            opacity={0.25}
+            opacity={hovered ? 0.6 : 0.25}
           />
         </mesh>
 
-        {/* Thumbnail Image Viewport */}
-        {project.thumbnail_url && (
-          <ThumbnailErrorBoundary>
-            <Image
-              url={project.thumbnail_url}
-              scale={[3.0, 1.6]}
-              position={[0, 0, 0.02]}
-              transparent
-              opacity={0.9}
-            />
-          </ThumbnailErrorBoundary>
-        )}
-
-        {/* Dossier Header */}
+        {/* Project Tagline on Plaque */}
         <Text
-          position={[0, 1.05, 0.05]}
-          fontSize={0.12}
-          color={project.featured ? '#fbbf24' : '#f8fafc'}
+          position={[0, 0.08, 0.02]}
+          fontSize={0.085}
+          color="#f1f5f9"
           anchorX="center"
           anchorY="middle"
-          font={JETBRAINS_MONO_FONT}
+          maxWidth={1.55}
+          textAlign="center"
         >
-          {project.featured
-            ? `[ ★ FEATURED LANDMARK // ${project.category.toUpperCase()} ]`
-            : `[ PROJECT DOSSIER // ${project.category.toUpperCase()} ]`}
+          {project.tagline.length > 55 ? `${project.tagline.slice(0, 52)}...` : project.tagline}
         </Text>
 
-        {/* Interactive Selection Trigger Button */}
-        <group
-          position={[0, -1.05, 0.05]}
-          onClick={(e) => {
-            e.stopPropagation();
-            onSelect();
-          }}
-          onPointerOver={(e) => {
-            e.stopPropagation();
-            onHover(true);
-            document.body.style.cursor = 'pointer';
-          }}
-          onPointerOut={() => {
-            onHover(false);
-            document.body.style.cursor = 'auto';
-          }}
+        {/* Action Prompt */}
+        <Text
+          position={[0, -0.12, 0.02]}
+          fontSize={0.075}
+          color={hovered ? '#38bdf8' : '#64748b'}
+          anchorX="center"
+          anchorY="middle"
+          letterSpacing={0.08}
         >
-          <mesh>
-            <planeGeometry args={[2.6, 0.36]} />
-            <meshBasicMaterial color="#090d16" />
-          </mesh>
-          <mesh position={[0, 0, -0.005]}>
-            <planeGeometry args={[2.64, 0.4]} />
-            <meshBasicMaterial
-              color={hovered ? primaryColor : '#334155'}
-            />
-          </mesh>
-          <Text
-            position={[0, 0, 0.02]}
-            fontSize={0.12}
-            color={hovered ? '#ffffff' : '#e2e8f0'}
-            anchorX="center"
-            anchorY="middle"
-            font={JETBRAINS_MONO_FONT}
-          >
-            {hovered ? '[ EXPLORE PROJECT DOSSIER → ]' : '[ CLICK OR SPACE TO ENTER ]'}
-          </Text>
-        </group>
+          {hovered ? 'View Project Details →' : 'Click to Inspect'}
+        </Text>
       </group>
     </group>
   );

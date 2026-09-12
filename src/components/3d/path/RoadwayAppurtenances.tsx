@@ -37,8 +37,9 @@ export const RoadwayAppurtenances: React.FC<RoadwayAppurtenancesProps> = ({
       const t = i / count;
       const frame = sampleCurveFrame(curve, t);
       const deckBottomY = frame.position.y - deckThickness / 2 - 0.35; // Account for keel depth
-      const pierHeight = Math.max(0.4, deckBottomY - (-0.6));
-      const pierCenterY = -0.6 + pierHeight / 2;
+      const pierBottomY = -1.2; // Anchors deep into planetary bedrock below y = -0.6
+      const pierHeight = Math.max(0.8, deckBottomY - pierBottomY);
+      const pierCenterY = pierBottomY + pierHeight / 2;
 
       dummy.position.set(frame.position.x, pierCenterY, frame.position.z);
       dummy.scale.set(1.6, pierHeight, 1.4);
@@ -50,38 +51,7 @@ export const RoadwayAppurtenances: React.FC<RoadwayAppurtenancesProps> = ({
     return piers;
   }, [curve, qualityPreset, deckThickness]);
 
-  // 2. Highway Safety Barrier Stanchions (Waist-height steel posts along outer curbs)
-  const stanchionData = useMemo(() => {
-    const totalLength = curve.getLength();
-    const spacing = qualityPreset === 'mobile' ? 8.0 : 4.0;
-    const count = Math.max(15, Math.floor(totalLength / spacing));
-    const items: { pos: THREE.Vector3; quat: THREE.Quaternion }[] = [];
-    const up = new THREE.Vector3(0, 1, 0);
-
-    for (let i = 0; i < count; i++) {
-      const t = (i + 0.3) / count;
-      const frame = sampleCurveFrame(curve, t);
-
-      const quat = new THREE.Quaternion().setFromUnitVectors(up, frame.normal);
-
-      // Left post
-      const leftPos = frame.position
-        .clone()
-        .addScaledVector(frame.binormal, -halfWidth + 0.05)
-        .addScaledVector(frame.normal, deckThickness / 2 + 0.22);
-      items.push({ pos: leftPos, quat });
-
-      // Right post
-      const rightPos = frame.position
-        .clone()
-        .addScaledVector(frame.binormal, halfWidth - 0.05)
-        .addScaledVector(frame.normal, deckThickness / 2 + 0.22);
-      items.push({ pos: rightPos, quat });
-    }
-    return items;
-  }, [curve, qualityPreset, halfWidth, deckThickness]);
-
-  // 3. Centerline Road Markings (Matte road paint dashes, non-emissive)
+  // 2. Centerline Road Markings (Matte road paint dashes, non-emissive)
   const centerDashes = useMemo(() => {
     const totalLength = curve.getLength();
     const spacing = qualityPreset === 'mobile' ? 6.0 : 3.5;
@@ -143,7 +113,6 @@ export const RoadwayAppurtenances: React.FC<RoadwayAppurtenancesProps> = ({
 
   // Instanced mesh references
   const pierRef = useRef<THREE.InstancedMesh>(null);
-  const stanchionRef = useRef<THREE.InstancedMesh>(null);
   const dashRef = useRef<THREE.InstancedMesh>(null);
   const studRef = useRef<THREE.InstancedMesh>(null);
 
@@ -156,20 +125,6 @@ export const RoadwayAppurtenances: React.FC<RoadwayAppurtenancesProps> = ({
       pierRef.current.instanceMatrix.needsUpdate = true;
     }
   }, [pierData]);
-
-  useEffect(() => {
-    if (stanchionRef.current && stanchionData.length > 0) {
-      const dummy = new THREE.Object3D();
-      stanchionData.forEach((item, i) => {
-        dummy.position.copy(item.pos);
-        dummy.quaternion.copy(item.quat);
-        dummy.scale.set(0.08, 0.44, 0.08); // Waist-height post (44cm high)
-        dummy.updateMatrix();
-        stanchionRef.current!.setMatrixAt(i, dummy.matrix);
-      });
-      stanchionRef.current.instanceMatrix.needsUpdate = true;
-    }
-  }, [stanchionData]);
 
   useEffect(() => {
     if (dashRef.current && centerDashes.length > 0) {
@@ -211,30 +166,14 @@ export const RoadwayAppurtenances: React.FC<RoadwayAppurtenancesProps> = ({
         >
           <boxGeometry args={[1, 1, 1]} />
           <meshStandardMaterial
-            color="#141a26"
-            roughness={0.7}
-            metalness={0.3}
+            color="#1c2738"
+            roughness={0.75}
+            metalness={0.18}
           />
         </instancedMesh>
       )}
 
-      {/* 2. Steel Guardrail Posts (Instanced: 1 Draw Call) */}
-      {stanchionData.length > 0 && (
-        <instancedMesh
-          ref={stanchionRef}
-          args={[undefined, undefined, stanchionData.length]}
-          castShadow
-        >
-          <boxGeometry args={[1, 1, 1]} />
-          <meshStandardMaterial
-            color="#334155"
-            roughness={0.4}
-            metalness={0.85}
-          />
-        </instancedMesh>
-      )}
-
-      {/* 3. Matte Roadway Centerline Dashes (Non-emissive physical traffic paint) */}
+      {/* 2. Matte Roadway Centerline Dashes (Non-emissive physical traffic paint) */}
       {centerDashes.length > 0 && (
         <instancedMesh
           ref={dashRef}

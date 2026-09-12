@@ -278,8 +278,13 @@ export const projectService = {
         .order('sort_order', { ascending: true });
 
       if (error) {
-        console.error('Failed to fetch published projects from Supabase:', error);
-        throw error;
+        console.warn(
+          `Supabase projects query returned error (${error.code || error.message || 'unknown'}). Serving local offline exhibits.`
+        );
+        const local = getLocalProjects();
+        return local
+          .filter((p) => p.status === 'published')
+          .sort((a, b) => a.sort_order - b.sort_order);
       }
 
       if (!data || data.length === 0) {
@@ -288,8 +293,11 @@ export const projectService = {
 
       return (data as unknown as RelationalProjectRow[]).map(formatRelationalProject);
     } catch (err) {
-      console.error('Supabase fetch failed in getPublishedProjects:', err);
-      throw err;
+      console.warn('Supabase fetch failed in getPublishedProjects, serving local exhibits:', err);
+      const local = getLocalProjects();
+      return local
+        .filter((p) => p.status === 'published')
+        .sort((a, b) => a.sort_order - b.sort_order);
     }
   },
 
@@ -317,8 +325,11 @@ export const projectService = {
         .order('sort_order', { ascending: true });
 
       if (error) {
-        console.error('Failed to fetch admin projects from Supabase:', error);
-        throw error;
+        console.warn(
+          `Supabase admin projects query returned error (${error.code || error.message || 'unknown'}). Serving local offline exhibits.`
+        );
+        const local = getLocalProjects();
+        return local.sort((a, b) => a.sort_order - b.sort_order);
       }
 
       if (!data || data.length === 0) {
@@ -327,8 +338,9 @@ export const projectService = {
 
       return (data as unknown as RelationalProjectRow[]).map(formatRelationalProject);
     } catch (err) {
-      console.error('Failed to fetch admin projects from Supabase:', err);
-      throw err;
+      console.warn('Failed to fetch admin projects from Supabase, serving local exhibits:', err);
+      const local = getLocalProjects();
+      return local.sort((a, b) => a.sort_order - b.sort_order);
     }
   },
 
@@ -355,12 +367,14 @@ export const projectService = {
         .eq('slug', slug)
         .maybeSingle();
 
-      if (error || !data) return null;
+      if (error || !data) {
+        return getLocalProjects().find((p) => p.slug === slug) || null;
+      }
 
       return formatRelationalProject(data as unknown as RelationalProjectRow);
     } catch (err) {
-      console.error('Failed to fetch project by slug from Supabase:', err);
-      return null;
+      console.warn('Failed to fetch project by slug from Supabase, using local fallback:', err);
+      return getLocalProjects().find((p) => p.slug === slug) || null;
     }
   },
 
@@ -438,12 +452,29 @@ export const projectService = {
         client.from('projects').update({ sort_order: index }).eq('id', id)
       );
 
-      await Promise.all(updates);
+      const results = await Promise.all(updates);
+      const hasError = results.some((r) => r.error);
+      if (hasError) {
+        console.warn('Supabase batch reorder failed, applying reorder locally');
+        const local = getLocalProjects();
+        orderedIds.forEach((id, index) => {
+          const found = local.find((p) => p.id === id);
+          if (found) found.sort_order = index;
+        });
+        saveLocalProjects(local);
+        return true;
+      }
       broadcastProjectChange();
       return true;
     } catch (err) {
-      console.error('Failed to update project sort order:', err);
-      return false;
+      console.warn('Failed to update project sort order in Supabase, updating locally:', err);
+      const local = getLocalProjects();
+      orderedIds.forEach((id, index) => {
+        const found = local.find((p) => p.id === id);
+        if (found) found.sort_order = index;
+      });
+      saveLocalProjects(local);
+      return true;
     }
   },
 
@@ -467,43 +498,66 @@ export const projectService = {
       return newProj;
     }
 
-    const { data, error } = await client
-      .from('projects')
-      .insert({
-        slug: projectData.slug,
-        title: projectData.title,
-        subtitle: projectData.subtitle || null,
-        tagline: projectData.tagline,
-        description: projectData.description || null,
-        description_markdown: projectData.description_markdown,
-        category: projectData.category,
-        node_style: projectData.node_style,
-        custom_model_url: projectData.custom_model_url || null,
-        node_color_primary: projectData.node_color_primary,
-        node_color_secondary: projectData.node_color_secondary,
-        thumbnail_url: projectData.thumbnail_url,
-        hero_media: projectData.hero_media || null,
-        video_url: projectData.video_url || null,
-        live_demo_url: projectData.live_demo_url || null,
-        github_repo_url: projectData.github_repo_url || null,
-        case_study_url: projectData.case_study_url || null,
-        year: projectData.year ? String(projectData.year) : null,
-        sort_order: projectData.sort_order,
-        featured: projectData.featured,
-        status: projectData.status,
-        achievements: projectData.achievements || [],
-        technical_specs: projectData.technical_specs || [],
-      })
-      .select()
-      .single();
+    try {
+      const { data, error } = await client
+        .from('projects')
+        .insert({
+          slug: projectData.slug,
+          title: projectData.title,
+          subtitle: projectData.subtitle || null,
+          tagline: projectData.tagline,
+          description: projectData.description || null,
+          description_markdown: projectData.description_markdown,
+          category: projectData.category,
+          node_style: projectData.node_style,
+          custom_model_url: projectData.custom_model_url || null,
+          node_color_primary: projectData.node_color_primary,
+          node_color_secondary: projectData.node_color_secondary,
+          thumbnail_url: projectData.thumbnail_url,
+          hero_media: projectData.hero_media || null,
+          video_url: projectData.video_url || null,
+          live_demo_url: projectData.live_demo_url || null,
+          github_repo_url: projectData.github_repo_url || null,
+          case_study_url: projectData.case_study_url || null,
+          year: projectData.year ? String(projectData.year) : null,
+          sort_order: projectData.sort_order,
+          featured: projectData.featured,
+          status: projectData.status,
+          achievements: projectData.achievements || [],
+          technical_specs: projectData.technical_specs || [],
+        })
+        .select()
+        .single();
 
-    if (error || !data) {
-      console.error('Failed to insert project into Supabase:', error);
-      return null;
+      if (error || !data) {
+        console.warn('Failed to insert project into Supabase, saving locally:', error);
+        const local = getLocalProjects();
+        const newProj: Project = {
+          ...projectData,
+          id: `proj-local-${Date.now()}`,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+        local.push(newProj);
+        saveLocalProjects(local);
+        return newProj;
+      }
+
+      broadcastProjectChange();
+      return data as unknown as Project;
+    } catch (err) {
+      console.warn('Failed to insert project into Supabase, saving locally:', err);
+      const local = getLocalProjects();
+      const newProj: Project = {
+        ...projectData,
+        id: `proj-local-${Date.now()}`,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+      local.push(newProj);
+      saveLocalProjects(local);
+      return newProj;
     }
-
-    broadcastProjectChange();
-    return data as unknown as Project;
   },
 
   /**
@@ -525,45 +579,64 @@ export const projectService = {
       return null;
     }
 
-    const payload: Database['public']['Tables']['projects']['Update'] = {};
-    if (updates.slug !== undefined) payload.slug = updates.slug;
-    if (updates.title !== undefined) payload.title = updates.title;
-    if (updates.subtitle !== undefined) payload.subtitle = updates.subtitle;
-    if (updates.tagline !== undefined) payload.tagline = updates.tagline;
-    if (updates.description !== undefined) payload.description = updates.description;
-    if (updates.description_markdown !== undefined) payload.description_markdown = updates.description_markdown;
-    if (updates.category !== undefined) payload.category = updates.category;
-    if (updates.node_style !== undefined) payload.node_style = updates.node_style;
-    if (updates.custom_model_url !== undefined) payload.custom_model_url = updates.custom_model_url;
-    if (updates.node_color_primary !== undefined) payload.node_color_primary = updates.node_color_primary;
-    if (updates.node_color_secondary !== undefined) payload.node_color_secondary = updates.node_color_secondary;
-    if (updates.thumbnail_url !== undefined) payload.thumbnail_url = updates.thumbnail_url;
-    if (updates.hero_media !== undefined) payload.hero_media = updates.hero_media;
-    if (updates.video_url !== undefined) payload.video_url = updates.video_url;
-    if (updates.live_demo_url !== undefined) payload.live_demo_url = updates.live_demo_url;
-    if (updates.github_repo_url !== undefined) payload.github_repo_url = updates.github_repo_url;
-    if (updates.case_study_url !== undefined) payload.case_study_url = updates.case_study_url;
-    if (updates.year !== undefined) payload.year = updates.year ? String(updates.year) : null;
-    if (updates.sort_order !== undefined) payload.sort_order = updates.sort_order;
-    if (updates.featured !== undefined) payload.featured = updates.featured;
-    if (updates.status !== undefined) payload.status = updates.status;
-    if (updates.achievements !== undefined) payload.achievements = updates.achievements;
-    if (updates.technical_specs !== undefined) payload.technical_specs = updates.technical_specs;
+    try {
+      const payload: Database['public']['Tables']['projects']['Update'] = {};
+      if (updates.slug !== undefined) payload.slug = updates.slug;
+      if (updates.title !== undefined) payload.title = updates.title;
+      if (updates.subtitle !== undefined) payload.subtitle = updates.subtitle;
+      if (updates.tagline !== undefined) payload.tagline = updates.tagline;
+      if (updates.description !== undefined) payload.description = updates.description;
+      if (updates.description_markdown !== undefined) payload.description_markdown = updates.description_markdown;
+      if (updates.category !== undefined) payload.category = updates.category;
+      if (updates.node_style !== undefined) payload.node_style = updates.node_style;
+      if (updates.custom_model_url !== undefined) payload.custom_model_url = updates.custom_model_url;
+      if (updates.node_color_primary !== undefined) payload.node_color_primary = updates.node_color_primary;
+      if (updates.node_color_secondary !== undefined) payload.node_color_secondary = updates.node_color_secondary;
+      if (updates.thumbnail_url !== undefined) payload.thumbnail_url = updates.thumbnail_url;
+      if (updates.hero_media !== undefined) payload.hero_media = updates.hero_media;
+      if (updates.video_url !== undefined) payload.video_url = updates.video_url;
+      if (updates.live_demo_url !== undefined) payload.live_demo_url = updates.live_demo_url;
+      if (updates.github_repo_url !== undefined) payload.github_repo_url = updates.github_repo_url;
+      if (updates.case_study_url !== undefined) payload.case_study_url = updates.case_study_url;
+      if (updates.year !== undefined) payload.year = updates.year ? String(updates.year) : null;
+      if (updates.sort_order !== undefined) payload.sort_order = updates.sort_order;
+      if (updates.featured !== undefined) payload.featured = updates.featured;
+      if (updates.status !== undefined) payload.status = updates.status;
+      if (updates.achievements !== undefined) payload.achievements = updates.achievements;
+      if (updates.technical_specs !== undefined) payload.technical_specs = updates.technical_specs;
 
-    const { data, error } = await client
-      .from('projects')
-      .update(payload)
-      .eq('id', id)
-      .select()
-      .single();
+      const { data, error } = await client
+        .from('projects')
+        .update(payload)
+        .eq('id', id)
+        .select()
+        .single();
 
-    if (error || !data) {
-      console.error('Failed to update project in Supabase:', error);
+      if (error || !data) {
+        console.warn('Failed to update project in Supabase, updating locally:', error);
+        const local = getLocalProjects();
+        const found = local.find((p) => p.id === id);
+        if (found) {
+          Object.assign(found, updates, { updated_at: new Date().toISOString() });
+          saveLocalProjects(local);
+          return found;
+        }
+        return null;
+      }
+
+      broadcastProjectChange();
+      return data as unknown as Project;
+    } catch (err) {
+      console.warn('Failed to update project in Supabase, updating locally:', err);
+      const local = getLocalProjects();
+      const found = local.find((p) => p.id === id);
+      if (found) {
+        Object.assign(found, updates, { updated_at: new Date().toISOString() });
+        saveLocalProjects(local);
+        return found;
+      }
       return null;
     }
-
-    broadcastProjectChange();
-    return data as unknown as Project;
   },
 
   /**
@@ -582,14 +655,33 @@ export const projectService = {
       return false;
     }
 
-    const { error } = await client.from('projects').delete().eq('id', id);
-    if (error) {
-      console.error('Failed to delete project from Supabase:', error);
+    try {
+      const { error } = await client.from('projects').delete().eq('id', id);
+      if (error) {
+        console.warn('Failed to delete project from Supabase, deleting locally:', error);
+        const local = getLocalProjects();
+        const idx = local.findIndex((p) => p.id === id);
+        if (idx !== -1) {
+          local.splice(idx, 1);
+          saveLocalProjects(local);
+          return true;
+        }
+        return false;
+      }
+
+      broadcastProjectChange();
+      return true;
+    } catch (err) {
+      console.warn('Failed to delete project from Supabase, deleting locally:', err);
+      const local = getLocalProjects();
+      const idx = local.findIndex((p) => p.id === id);
+      if (idx !== -1) {
+        local.splice(idx, 1);
+        saveLocalProjects(local);
+        return true;
+      }
       return false;
     }
-
-    broadcastProjectChange();
-    return true;
   },
 
   /**
@@ -611,16 +703,36 @@ export const projectService = {
       return false;
     }
 
-    const { error } = await client
-      .from('projects')
-      .update({ status })
-      .eq('id', id);
+    try {
+      const { error } = await client
+        .from('projects')
+        .update({ status })
+        .eq('id', id);
 
-    if (!error) {
-      broadcastProjectChange();
-      return true;
+      if (!error) {
+        broadcastProjectChange();
+        return true;
+      }
+
+      console.warn('Failed to toggle status in Supabase, toggling locally:', error);
+      const local = getLocalProjects();
+      const found = local.find((p) => p.id === id);
+      if (found) {
+        found.status = status;
+        saveLocalProjects(local);
+        return true;
+      }
+      return false;
+    } catch {
+      const local = getLocalProjects();
+      const found = local.find((p) => p.id === id);
+      if (found) {
+        found.status = status;
+        saveLocalProjects(local);
+        return true;
+      }
+      return false;
     }
-    return false;
   },
 
   /**
@@ -633,25 +745,29 @@ export const projectService = {
       return URL.createObjectURL(file);
     }
 
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
 
-    const { data, error } = await client.storage
-      .from('project-media')
-      .upload(fileName, file, {
-        cacheControl: '3600',
-        upsert: true,
-      });
+      const { data, error } = await client.storage
+        .from('project-media')
+        .upload(fileName, file, {
+          cacheControl: '3600',
+          upsert: true,
+        });
 
-    if (error || !data) {
-      console.error('Failed to upload asset to Supabase Storage:', error);
-      return null;
+      if (error || !data) {
+        console.warn('Failed to upload asset to Supabase Storage, using local object URL:', error);
+        return URL.createObjectURL(file);
+      }
+
+      const {
+        data: { publicUrl },
+      } = client.storage.from('project-media').getPublicUrl(fileName);
+
+      return publicUrl;
+    } catch {
+      return URL.createObjectURL(file);
     }
-
-    const {
-      data: { publicUrl },
-    } = client.storage.from('project-media').getPublicUrl(fileName);
-
-    return publicUrl;
   },
 };

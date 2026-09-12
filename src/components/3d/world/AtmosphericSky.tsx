@@ -1,15 +1,15 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef } from 'react';
 import * as THREE from 'three';
+import { useFrame } from '@react-three/fiber';
 import { Stars } from '@react-three/drei';
 import { useUIStore } from '@/stores/useUIStore';
 
-// Vertex shader computing normalized world height for atmospheric Rayleigh/Mie scattering gradient
+// Vertex shader passing local position so the horizon stays permanently level with traveler's eye
 const skyVertexShader = `
-  varying vec3 vWorldPosition;
+  varying vec3 vLocalPosition;
   void main() {
-    vec4 worldPosition = modelMatrix * vec4(position, 1.0);
-    vWorldPosition = worldPosition.xyz;
-    gl_Position = projectionMatrix * viewMatrix * worldPosition;
+    vLocalPosition = position;
+    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
   }
 `;
 
@@ -19,10 +19,10 @@ const skyFragmentShader = `
   uniform vec3 uMidColor;
   uniform vec3 uHorizonColor;
   uniform vec3 uNadirColor;
-  varying vec3 vWorldPosition;
+  varying vec3 vLocalPosition;
 
   void main() {
-    vec3 dir = normalize(vWorldPosition);
+    vec3 dir = normalize(vLocalPosition);
     float elevation = dir.y; // -1.0 to 1.0
 
     vec3 finalColor;
@@ -31,12 +31,12 @@ const skyFragmentShader = `
       float t = pow(elevation, 0.45); // Soft exponential curve for realistic atmospheric band
       vec3 skyAtmosphere = mix(uHorizonColor, uZenithColor, t);
       // Extra luminous glow near the horizon line
-      float horizonHaze = exp(-elevation * 12.0);
-      finalColor = mix(skyAtmosphere, uHorizonColor, horizonHaze * 0.6);
+      float horizonHaze = exp(-elevation * 10.0);
+      finalColor = mix(skyAtmosphere, uHorizonColor, horizonHaze * 0.55);
     } else {
       // Subtle ground horizon reflection below horizontal plane
-      float t = clamp(-elevation * 5.0, 0.0, 1.0);
-      finalColor = mix(uHorizonColor * 0.7, uNadirColor, t);
+      float t = clamp(-elevation * 4.0, 0.0, 1.0);
+      finalColor = mix(uHorizonColor * 0.65, uNadirColor, t);
     }
 
     gl_FragColor = vec4(finalColor, 1.0);
@@ -45,13 +45,14 @@ const skyFragmentShader = `
 
 export const AtmosphericSky: React.FC = () => {
   const qualityPreset = useUIStore((s) => s.qualityPreset);
+  const skyGroupRef = useRef<THREE.Group>(null);
 
   const uniforms = useMemo(
     () => ({
-      uZenithColor: { value: new THREE.Color('#050811') },   // Deep celestial indigo
-      uMidColor: { value: new THREE.Color('#0f172a') },      // Mid-sky slate
-      uHorizonColor: { value: new THREE.Color('#253348') },  // Luminous twilight titanium horizon
-      uNadirColor: { value: new THREE.Color('#05070c') },    // Ground nadir
+      uZenithColor: { value: new THREE.Color('#060b18') },   // Deep celestial indigo
+      uMidColor: { value: new THREE.Color('#142238') },      // Mid-sky slate
+      uHorizonColor: { value: new THREE.Color('#2c4060') },  // Luminous twilight titanium horizon
+      uNadirColor: { value: new THREE.Color('#090e1a') },    // Ground nadir
     }),
     []
   );
@@ -62,8 +63,15 @@ export const AtmosphericSky: React.FC = () => {
     return 1600;
   }, [qualityPreset]);
 
+  // Keep the celestial dome centered on the camera throughout the 300m journey
+  useFrame(({ camera }) => {
+    if (skyGroupRef.current) {
+      skyGroupRef.current.position.copy(camera.position);
+    }
+  });
+
   return (
-    <group>
+    <group ref={skyGroupRef}>
       {/* 1. Large-Scale Inverted Celestial Atmospheric Dome */}
       <mesh scale={[-1, 1, 1]}>
         <sphereGeometry args={[500, 32, 16]} />

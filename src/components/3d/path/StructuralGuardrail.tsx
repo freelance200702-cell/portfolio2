@@ -29,9 +29,9 @@ export const StructuralGuardrail: React.FC<StructuralGuardrailProps> = ({
     const leftVerts: number[] = [];
     const rightVerts: number[] = [];
     const indices: number[] = [];
-    const beamHeight = 0.14; // 14cm tall beam
-    const beamThick = 0.05;  // 5cm thick profile
-    const elevationAboveDeck = deckThickness / 2 + 0.32; // Centered at 32cm above deck
+    const beamHeight = 0.04; // Low-profile 4cm edge curb reveal
+    const beamThick = 0.04;  // 4cm thick profile
+    const elevationAboveDeck = deckThickness / 2 + 0.04; // Sits neatly along the architectural curb rim
 
     for (let i = 0; i <= railSamples; i++) {
       const t = i / railSamples;
@@ -124,7 +124,7 @@ export const StructuralGuardrail: React.FC<StructuralGuardrailProps> = ({
     rGeom.computeVertexNormals();
 
     return { leftBeamGeom: lGeom, rightBeamGeom: rGeom };
-  }, [curve, railSamples, roadWidth, deckThickness, halfWidth]);
+  }, [curve, railSamples, deckThickness, halfWidth]);
 
   useEffect(() => {
     return () => {
@@ -135,21 +135,21 @@ export const StructuralGuardrail: React.FC<StructuralGuardrailProps> = ({
 
   return (
     <group>
-      {/* Left Galvanized Steel Guardrail */}
+      {/* Left Architectural Edge Trim */}
       <mesh geometry={leftBeamGeom} castShadow receiveShadow>
         <meshStandardMaterial
-          color="#475569"
-          roughness={0.35}
-          metalness={0.88}
+          color="#334155"
+          roughness={0.65}
+          metalness={0.35}
         />
       </mesh>
 
-      {/* Right Galvanized Steel Guardrail */}
+      {/* Right Architectural Edge Trim */}
       <mesh geometry={rightBeamGeom} castShadow receiveShadow>
         <meshStandardMaterial
-          color="#475569"
-          roughness={0.35}
-          metalness={0.88}
+          color="#334155"
+          roughness={0.65}
+          metalness={0.35}
         />
       </mesh>
     </group>

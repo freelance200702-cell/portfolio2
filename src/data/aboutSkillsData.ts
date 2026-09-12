@@ -1,8 +1,8 @@
 import type { AboutProfile, EngineeringDiscipline } from '@/types/skills';
 
 export const ABOUT_PROFILE: AboutProfile = {
-  name: 'Developer Portfolio',
-  role: 'Systems, Graphics & 3D Web Systems',
+  name: 'Adel R.',
+  role: 'Systems, Graphics & Simulation Engineer',
   location: 'Interactive Simulation Environment',
   status: 'Portfolio Infrastructure Ready // Awaiting Project Exhibits',
   coreStatement:

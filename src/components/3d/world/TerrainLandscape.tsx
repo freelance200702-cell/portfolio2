@@ -29,11 +29,11 @@ export const TerrainLandscape: React.FC<TerrainLandscapeProps> = ({ curve }) => 
 
     for (let i = 0; i < terraceCount; i++) {
       const z = zStart - i * zStep;
-      // Procedural height and lateral width variations
+      // Procedural height and lateral width variations creating monumental canyon walls
       const tier = (i % 3) + 1;
-      const height = tier * 2.2 + Math.sin(i * 0.7) * 1.2;
-      const width = 35 + (i % 4) * 8;
-      const length = zStep * 1.15;
+      const height = tier * 4.8 + Math.sin(i * 0.7) * 2.0 + 6.0;
+      const width = 45 + (i % 4) * 8;
+      const length = zStep * 1.18;
       items.push({ z, height, width, length, i });
     }
     return items;
@@ -45,7 +45,7 @@ export const TerrainLandscape: React.FC<TerrainLandscapeProps> = ({ curve }) => 
     // 1. Configure Left Terraces
     if (leftTerraceRef.current) {
       terraceData.forEach((t, idx) => {
-        const lateralX = -32 - t.width * 0.5 - Math.sin(t.i * 0.5) * 6;
+        const lateralX = -32 - t.width * 0.5 - Math.sin(t.i * 0.5) * 4;
         dummy.position.set(lateralX, t.height * 0.5 - 0.6, t.z);
         dummy.scale.set(t.width, t.height, t.length);
         dummy.updateMatrix();
@@ -57,9 +57,9 @@ export const TerrainLandscape: React.FC<TerrainLandscapeProps> = ({ curve }) => 
     // 2. Configure Right Terraces
     if (rightTerraceRef.current) {
       terraceData.forEach((t, idx) => {
-        const lateralX = 32 + t.width * 0.5 + Math.cos(t.i * 0.5) * 6;
-        dummy.position.set(lateralX, (t.height * 0.9) * 0.5 - 0.6, t.z);
-        dummy.scale.set(t.width, t.height * 0.9, t.length);
+        const lateralX = 32 + t.width * 0.5 + Math.cos(t.i * 0.5) * 4;
+        dummy.position.set(lateralX, (t.height * 0.95) * 0.5 - 0.6, t.z);
+        dummy.scale.set(t.width, t.height * 0.95, t.length);
         dummy.updateMatrix();
         rightTerraceRef.current!.setMatrixAt(idx, dummy.matrix);
       });
@@ -69,23 +69,27 @@ export const TerrainLandscape: React.FC<TerrainLandscapeProps> = ({ curve }) => 
 
   return (
     <group>
-      {/* 1. Expansive Foundational Bedrock Floor (Ground Plane at y = -0.6) */}
-      <mesh position={[0, -0.6, -240]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-        <planeGeometry args={[600, 800]} />
+      {/* 1. Expansive Foundational Bedrock Floor (Atmospheric Ground Plane at y = -0.6) */}
+      <mesh position={[0, -0.6, -200]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <planeGeometry args={[1000, 1200]} />
         <meshStandardMaterial
-          color="#060810"
-          roughness={0.5}
-          metalness={0.82}
+          color="#141d2c"
+          roughness={0.82}
+          metalness={0.1}
         />
       </mesh>
 
-      {/* 2. Subterranean Geometric Perspective Grid Lines */}
-      <gridHelper
-        args={[600, 60, '#1e293b', '#0d131f']}
-        position={[0, -0.58, -240]}
-      />
+      {/* 2. Under-Viaduct Engineered Cutting / Highway Bed (Visibly grounds the road structure) */}
+      <mesh position={[0, -0.58, -180]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <planeGeometry args={[36, 750]} />
+        <meshStandardMaterial
+          color="#1a2538"
+          roughness={0.78}
+          metalness={0.12}
+        />
+      </mesh>
 
-      {/* 3. Left Flanking Architectural Canyon Terraces (Single Instanced Draw Call) */}
+      {/* 3. Left Flanking Architectural Stepped Terraces (Single Instanced Draw Call) */}
       <instancedMesh
         ref={leftTerraceRef}
         args={[undefined, undefined, terraceCount]}
@@ -94,13 +98,13 @@ export const TerrainLandscape: React.FC<TerrainLandscapeProps> = ({ curve }) => 
       >
         <boxGeometry args={[1, 1, 1]} />
         <meshStandardMaterial
-          color="#0a0e17"
-          roughness={0.65}
-          metalness={0.85}
+          color="#1e2a3e"
+          roughness={0.74}
+          metalness={0.16}
         />
       </instancedMesh>
 
-      {/* 4. Right Flanking Architectural Canyon Terraces (Single Instanced Draw Call) */}
+      {/* 4. Right Flanking Architectural Stepped Terraces (Single Instanced Draw Call) */}
       <instancedMesh
         ref={rightTerraceRef}
         args={[undefined, undefined, terraceCount]}
@@ -109,31 +113,21 @@ export const TerrainLandscape: React.FC<TerrainLandscapeProps> = ({ curve }) => 
       >
         <boxGeometry args={[1, 1, 1]} />
         <meshStandardMaterial
-          color="#0b101b"
-          roughness={0.65}
-          metalness={0.85}
+          color="#1b263a"
+          roughness={0.74}
+          metalness={0.16}
         />
       </instancedMesh>
 
-      {/* 5. Glowing Sub-Terrace Horizon Accents (Subtle hairline edge luminescence) */}
-      <mesh position={[-28, -0.52, -220]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[0.08, 650]} />
-        <meshBasicMaterial color="#38bdf8" transparent opacity={0.4} />
+      {/* 5. Subtle Base Horizon Seam Lines (Gentle tonal separation without neon glare) */}
+      <mesh position={[-30, -0.56, -220]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[0.12, 700]} />
+        <meshBasicMaterial color="#38bdf8" transparent opacity={0.35} />
       </mesh>
 
-      <mesh position={[28, -0.52, -220]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[0.08, 650]} />
-        <meshBasicMaterial color="#64748b" transparent opacity={0.4} />
-      </mesh>
-
-      {/* 6. Valley Floor Energy Trenches & Foundation Conduits */}
-      <mesh position={[-16, -0.53, -220]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[0.15, 600]} />
-        <meshBasicMaterial color="#0284c7" transparent opacity={0.25} />
-      </mesh>
-      <mesh position={[16, -0.53, -220]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[0.15, 600]} />
-        <meshBasicMaterial color="#0284c7" transparent opacity={0.25} />
+      <mesh position={[30, -0.56, -220]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[0.12, 700]} />
+        <meshBasicMaterial color="#38bdf8" transparent opacity={0.35} />
       </mesh>
     </group>
   );

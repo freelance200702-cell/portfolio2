@@ -116,10 +116,10 @@ export const RecessedCurbGuides: React.FC<RecessedCurbGuidesProps> = ({
         >
           <boxGeometry args={[1, 1, 1]} />
           <meshStandardMaterial
-            color="#e2e8f0"
-            emissive="#94a3b8"
-            emissiveIntensity={0.6}
-            roughness={0.2}
+            color="#f1f5f9"
+            emissive="#cbd5e1"
+            emissiveIntensity={0.25}
+            roughness={0.4}
           />
         </instancedMesh>
       )}

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { useJourneyStore } from '@/stores/useJourneyStore';
 import { useUIStore, type QualityPreset } from '@/stores/useUIStore';
 import { Button } from '../common/Button';
@@ -8,16 +7,15 @@ import {
   ChevronRight,
   Volume2,
   VolumeX,
-  Crosshair,
   ArrowUpRight,
 } from 'lucide-react';
 import type { ProjectCategory } from '@/types/project';
 
 const CATEGORIES: { id: ProjectCategory | 'all'; label: string }[] = [
-  { id: 'all', label: 'ALL' },
-  { id: 'three_d_graphics', label: '3D GRAPHICS' },
-  { id: 'ai_ml', label: 'AI & SYSTEMS' },
-  { id: 'systems_engine', label: 'BARE-METAL' },
+  { id: 'all', label: 'All Works' },
+  { id: 'three_d_graphics', label: 'Graphics' },
+  { id: 'ai_ml', label: 'AI & Systems' },
+  { id: 'systems_engine', label: 'Engines' },
 ];
 
 export const HUD: React.FC = () => {
@@ -41,31 +39,24 @@ export const HUD: React.FC = () => {
   const projectAnchors = useJourneyStore((s) => s.projectAnchors);
   const jumpToObservatory = useJourneyStore((s) => s.jumpToObservatory);
   const cameraMode = useJourneyStore((s) => s.cameraMode);
-  const progressPercent = (targetProgress * 100).toFixed(1);
-  const isIntroPhase = targetProgress < 0.08;
-  const isTerminus = targetProgress >= 0.95;
+  const isIntroPhase = targetProgress < 0.05;
+  const isTerminus = targetProgress >= 0.96;
   const isObservatoryPhase =
     cameraMode === 'observatory' || (targetProgress >= 0.86 && targetProgress < 0.95);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-20 flex flex-col justify-between p-4 sm:p-6 select-none font-mono">
-      {/* 1. Viewfinder Framing Reticles (Subtle hairline accents) */}
-      <div className="absolute top-4 left-4 w-3 h-3 border-t border-l border-white/[0.08] pointer-events-none" />
-      <div className="absolute top-4 right-4 w-3 h-3 border-t border-r border-white/[0.08] pointer-events-none" />
-      <div className="absolute bottom-4 left-4 w-3 h-3 border-b border-l border-white/[0.08] pointer-events-none" />
-      <div className="absolute bottom-4 right-4 w-3 h-3 border-b border-r border-white/[0.08] pointer-events-none" />
-
-      {/* 2. Top Header Navigation Bar */}
+    <div className="fixed inset-0 pointer-events-none z-20 flex flex-col justify-between p-4 sm:p-7 select-none font-sans">
+      {/* 1. Top Filter Navigation Bar */}
       <div className="flex items-center justify-between gap-4 w-full mt-14 sm:mt-14">
-        {/* Minimalist Discipline Filter Tabs & Systems Observatory Link (Desktop) */}
-        <div className="pointer-events-auto hidden sm:flex items-center border border-white/[0.06] bg-[#090d16]/45 backdrop-blur-xl px-1 py-0.5 rounded-sm">
+        {/* Discipline Filter Tabs & About / Systems Pavilion Link */}
+        <div className="pointer-events-auto hidden sm:flex items-center gap-1 border border-white/[0.06] bg-[#070a12]/50 backdrop-blur-xl px-1.5 py-1 rounded-full shadow-lg">
           {CATEGORIES.map((cat) => (
             <button
               key={cat.id}
               onClick={() => setCategory(cat.id)}
-              className={`px-3 py-1 text-[10px] tracking-wider transition-all rounded-sm ${
+              className={`px-3 py-1 text-xs tracking-wide transition-all rounded-full ${
                 selectedCategory === cat.id
-                  ? 'bg-white text-black font-semibold'
+                  ? 'bg-white text-black font-medium shadow-sm'
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
@@ -73,42 +64,36 @@ export const HUD: React.FC = () => {
             </button>
           ))}
 
-          <span className="text-white/20 px-1">|</span>
+          <div className="w-[1px] h-3 bg-white/10 mx-1" />
 
           <button
             onClick={jumpToObservatory}
-            className={`px-3 py-1 text-[10px] tracking-wider transition-all rounded-sm ${
+            className={`px-3 py-1 text-xs tracking-wide transition-all rounded-full ${
               isObservatoryPhase
-                ? 'bg-primary text-black font-semibold shadow-[0_0_10px_rgba(56,189,248,0.5)]'
+                ? 'bg-sky-400 text-black font-medium shadow-sm'
                 : 'text-muted-foreground hover:text-foreground hover:bg-white/[0.04]'
             }`}
           >
-            SYSTEMS / ABOUT
+            Observatory
           </button>
         </div>
 
         {/* Mobile Header Quick Actions */}
-        <div className="pointer-events-auto flex sm:hidden items-center gap-1.5 border border-white/[0.08] bg-[#050508]/70 backdrop-blur-md px-2 py-1 rounded-sm text-[10px]">
+        <div className="pointer-events-auto flex sm:hidden items-center gap-1.5 border border-white/[0.08] bg-[#070a12]/70 backdrop-blur-md px-2.5 py-1 rounded-full text-xs">
           <button
             onClick={jumpToObservatory}
-            className={`px-2 py-0.5 rounded-sm tracking-wider font-semibold uppercase ${
+            className={`px-2.5 py-0.5 rounded-full tracking-wide text-xs ${
               isObservatoryPhase
-                ? 'bg-primary text-black'
-                : 'text-primary hover:bg-white/[0.06]'
+                ? 'bg-sky-400 text-black font-medium'
+                : 'text-sky-300 hover:bg-white/[0.06]'
             }`}
           >
-            ABOUT / SYS
+            Observatory
           </button>
         </div>
 
-        {/* Telemetry & Quality Controls */}
-        <div className="pointer-events-auto ml-auto flex items-center gap-2 border border-white/[0.06] bg-[#090d16]/45 backdrop-blur-xl px-2 py-1 rounded-sm text-[10px]">
-          <span className="text-muted-foreground hidden md:inline">
-            EXPEDITION // {progressPercent}%
-          </span>
-
-          <span className="text-white/20 hidden md:inline">|</span>
-
+        {/* Audio & Quality Controls */}
+        <div className="pointer-events-auto ml-auto flex items-center gap-2 border border-white/[0.06] bg-[#070a12]/50 backdrop-blur-xl px-2.5 py-1 rounded-full text-xs shadow-lg">
           {/* Audio toggle */}
           <button
             onClick={toggleAudio}
@@ -122,114 +107,59 @@ export const HUD: React.FC = () => {
             )}
           </button>
 
-          <span className="text-white/20">|</span>
+          <div className="w-[1px] h-3 bg-white/10" />
 
-          {/* Quality Mode Switcher (cinematic -> balanced -> mobile -> reduced_3d) */}
+          {/* Quality Mode Switcher */}
           <button
             onClick={() => {
               const presets: QualityPreset[] = ['cinematic', 'balanced', 'mobile', 'reduced_3d'];
               const nextIdx = (presets.indexOf(qualityPreset) + 1) % presets.length;
               setQualityPreset(presets[nextIdx]);
             }}
-            className="uppercase text-muted-foreground hover:text-foreground transition-colors tracking-wider px-1"
-            title="Visual Quality Mode (Cinematic / Balanced / Mobile / Eco Reduced-3D)"
+            className="text-muted-foreground hover:text-foreground transition-colors text-[10px] tracking-wider px-1 uppercase"
+            title="Visual Quality (Cinematic / Balanced / Mobile / Eco)"
           >
-            {qualityPreset === 'reduced_3d' ? '[ECO]' : `[${qualityPreset.slice(0, 3).toUpperCase()}]`}
+            {qualityPreset === 'reduced_3d' ? 'ECO' : qualityPreset.slice(0, 3)}
           </button>
         </div>
       </div>
 
-      {/* 3. Center Left: Technical Project Dossier Telemetry (Desktop / Tablet) */}
-      {currentProject && !isIntroPhase && !isTerminus && !isObservatoryPhase && (
-        <div
-          onClick={() => selectProject(currentProject)}
-          className="pointer-events-auto hidden md:flex flex-col gap-1.5 p-4 max-w-sm rounded-sm border border-white/[0.08] bg-[#090d16]/55 backdrop-blur-2xl self-start mt-auto mb-auto cursor-pointer group hover:border-white/30 transition-all shadow-2xl animate-fade-in"
-        >
-          <div className="flex items-center justify-between text-[10px] text-muted-foreground border-b border-white/[0.06] pb-2">
-            <span className="tracking-widest">
-              [ MILESTONE // 0{activeProjectIndex + 1} ]
-            </span>
-            <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground group-hover:text-foreground group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
-          </div>
-
-          <h3 className="font-sans font-bold text-sm text-foreground tracking-tight group-hover:text-white transition-colors">
-            {currentProject.title}
-          </h3>
-
-          <p className="font-sans text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-            {currentProject.tagline}
-          </p>
-
-          <div className="flex items-center gap-1.5 pt-1.5 flex-wrap">
-            {currentProject.technologies.slice(0, 3).map((tech) => (
-              <span
-                key={tech}
-                className="text-[9px] px-1.5 py-0.5 bg-white/[0.04] border border-white/[0.08] text-muted-foreground"
+      {/* 2. Bottom Unified Journey Timeline & Milestone Indicator */}
+      <div className="pointer-events-auto flex flex-col gap-2 max-w-xl w-full mx-auto p-3.5 sm:p-4 rounded-2xl border border-white/[0.08] bg-[#070a12]/60 backdrop-blur-2xl shadow-2xl transition-all">
+        {/* Active Milestone Title / Status line */}
+        <div className="flex items-center justify-between text-xs px-1">
+          <div className="flex items-center gap-2 text-foreground font-medium truncate">
+            {isIntroPhase ? (
+              <span className="text-muted-foreground">Journey Departure</span>
+            ) : isTerminus ? (
+              <span className="text-muted-foreground">Journey Horizon</span>
+            ) : isObservatoryPhase ? (
+              <span className="text-sky-300 font-medium">Systems Observatory</span>
+            ) : currentProject ? (
+              <button
+                onClick={() => selectProject(currentProject)}
+                className="flex items-center gap-1.5 hover:text-white transition-colors group cursor-pointer"
               >
-                {tech}
-              </span>
-            ))}
+                <span className="text-muted-foreground font-mono text-[11px]">
+                  0{activeProjectIndex + 1}
+                </span>
+                <span className="text-white font-medium truncate">{currentProject.title}</span>
+                <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </button>
+            ) : (
+              <span className="text-muted-foreground">Exhibition Path</span>
+            )}
           </div>
 
-          <div className="mt-1 pt-2 border-t border-white/[0.06] flex items-center justify-between text-[9px] text-muted-foreground">
-            <span>PRESS SPACE TO ENGAGE</span>
-            <Crosshair className="h-3 w-3 text-muted-foreground group-hover:rotate-90 transition-transform" />
-          </div>
-        </div>
-      )}
-
-      {/* Mobile Bottom Exhibit Preview Strip (Above Scrubber) */}
-      {currentProject && !isIntroPhase && !isTerminus && !isObservatoryPhase && (
-        <div
-          onClick={() => selectProject(currentProject)}
-          className="pointer-events-auto flex md:hidden items-center justify-between gap-3 p-2.5 mx-auto max-w-2xl w-full rounded-sm border border-white/[0.12] bg-[#050508]/90 backdrop-blur-xl mb-1 cursor-pointer active:scale-[0.99] transition-all shadow-2xl"
-        >
-          <div className="flex flex-col min-w-0">
-            <span className="text-[9px] text-muted-foreground tracking-widest uppercase">
-              EXHIBIT 0{activeProjectIndex + 1} // {currentProject.category.replace(/_/g, ' ')}
-            </span>
-            <h3 className="font-sans font-bold text-xs text-white truncate">
-              {currentProject.title}
-            </h3>
-          </div>
-          <div className="flex items-center gap-1 text-[10px] text-primary font-semibold shrink-0 bg-white/[0.06] px-2 py-1 rounded-sm border border-white/[0.08]">
-            <span>INSPECT</span>
-            <ArrowUpRight className="h-3 w-3" />
-          </div>
-        </div>
-      )}
-
-      {/* Graceful Empty State (When no published exhibits exist) */}
-      {!currentProject && !isIntroPhase && !isTerminus && !isObservatoryPhase && (
-        <div className="pointer-events-auto hidden md:flex flex-col gap-2 p-5 max-w-sm rounded-sm border border-white/[0.08] bg-[#050508]/85 backdrop-blur-2xl self-start mt-auto mb-auto shadow-2xl animate-fade-in">
-          <div className="flex items-center gap-2 text-[10px] text-amber-400/90 border-b border-white/[0.06] pb-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
-            <span className="tracking-widest">EXPEDITION CLEAR // STANDBY</span>
-          </div>
-          <h3 className="font-sans font-bold text-sm text-foreground tracking-tight">
-            No Published Exhibits
-          </h3>
-          <p className="font-sans text-xs text-muted-foreground leading-relaxed">
-            The continuous 3D trajectory is ready. No published projects are currently active along the spline.
-          </p>
-          <div className="mt-1 pt-2 border-t border-white/[0.06] text-[10px]">
-            <Link to="/admin" className="text-primary hover:underline flex items-center gap-1.5">
-              <span>Access Management Dashboard →</span>
-            </Link>
-          </div>
-        </div>
-      )}
-
-      {/* 4. Bottom Viewfinder HUD: Precision Scrubber & Trajectory Telemetry */}
-      <div className="pointer-events-auto flex flex-col gap-2 max-w-2xl w-full mx-auto p-3 sm:p-4 rounded-sm border border-white/[0.08] bg-[#090d16]/55 backdrop-blur-2xl shadow-2xl">
-        {/* Progress Timeline Scrubber */}
-        <div className="flex items-center gap-3">
-          <span className="text-[10px] tracking-wider text-muted-foreground w-12 text-left">
-            T:{progressPercent}%
+          <span className="text-[11px] font-mono text-muted-foreground shrink-0 pl-2">
+            {(targetProgress * 100).toFixed(0)}%
           </span>
+        </div>
 
+        {/* Hairline Timeline Scrubber */}
+        <div className="flex items-center gap-3 pt-1">
           <div
-            className="relative flex-1 h-7 cursor-pointer overflow-visible flex items-center touch-none py-2"
+            className="relative flex-1 h-6 cursor-pointer overflow-visible flex items-center touch-none py-2"
             onClick={(e) => {
               const rect = e.currentTarget.getBoundingClientRect();
               const clickX = e.clientX - rect.left;
@@ -238,19 +168,18 @@ export const HUD: React.FC = () => {
             }}
           >
             {/* Visual Hairline Progress Track */}
-            <div className="relative w-full h-1.5 bg-white/[0.08] flex items-center overflow-visible">
-              {/* Hairline Progress Fill */}
+            <div className="relative w-full h-[2px] bg-white/10 rounded-full flex items-center overflow-visible">
+              {/* Progress Fill */}
               <div
-                className="h-full bg-white transition-all duration-75"
+                className="h-full bg-white/70 rounded-full transition-all duration-75"
                 style={{ width: `${targetProgress * 100}%` }}
               />
 
-              {/* Precision Milestone Waypoint Markers */}
+              {/* Waypoint Markers */}
               {projects.map((p, i) => {
                 const anchorT = projectAnchors[i] ?? (i + 1) / (projects.length + 1);
                 const isActive = !isIntroPhase && !isTerminus && i === activeProjectIndex;
 
-                // Prevent timeline crowding if project count exceeds 20
                 if (projects.length > 20 && !isActive && !p.featured && i % 2 !== 0) {
                   return null;
                 }
@@ -262,28 +191,28 @@ export const HUD: React.FC = () => {
                       e.stopPropagation();
                       jumpToIndex(i);
                     }}
-                    title={`Waypoint 0${i + 1}: ${p.title}`}
-                    className={`absolute top-1/2 -translate-y-1/2 -translate-x-1/2 transition-all p-1 -m-1 ${
+                    title={`${p.title}`}
+                    className={`absolute top-1/2 -translate-y-1/2 -translate-x-1/2 transition-all rounded-full ${
                       isActive
-                        ? 'h-4 w-4 bg-white border border-black shadow-[0_0_10px_rgba(255,255,255,0.8)] z-10'
-                        : 'h-2.5 w-2.5 bg-white/40 hover:bg-white/80 border border-black/40'
+                        ? 'h-3 w-3 bg-white ring-4 ring-white/20 z-10 shadow-[0_0_8px_rgba(255,255,255,0.8)]'
+                        : 'h-1.5 w-1.5 bg-white/40 hover:bg-white/90 hover:scale-150'
                     }`}
                     style={{ left: `${anchorT * 100}%` }}
                   />
                 );
               })}
 
-              {/* Systems Observatory Waypoint Marker */}
+              {/* Observatory Marker */}
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   jumpToObservatory();
                 }}
-                title="Systems Observatory (About & Skills)"
-                className={`absolute top-1/2 -translate-y-1/2 -translate-x-1/2 transition-all p-1 -m-1 ${
+                title="Systems Observatory"
+                className={`absolute top-1/2 -translate-y-1/2 -translate-x-1/2 transition-all rounded-full ${
                   isObservatoryPhase
-                    ? 'h-4 w-4 bg-sky-400 border border-black shadow-[0_0_10px_rgba(56,189,248,0.9)] z-10'
-                    : 'h-2.5 w-2.5 bg-sky-400/60 hover:bg-sky-400 border border-black/40'
+                    ? 'h-3 w-3 bg-sky-400 ring-4 ring-sky-400/30 z-10 shadow-[0_0_8px_rgba(56,189,248,0.8)]'
+                    : 'h-1.5 w-1.5 bg-sky-400/50 hover:bg-sky-400 hover:scale-150'
                 }`}
                 style={{ left: '88.5%' }}
               />
@@ -291,13 +220,13 @@ export const HUD: React.FC = () => {
           </div>
 
           {/* Stepping controls */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 shrink-0">
             <Button
               variant="outline"
               size="icon"
               onClick={prevProject}
-              className="h-7 w-7 rounded-sm"
-              title="Previous Waypoint (A / Left)"
+              className="h-7 w-7 rounded-full border-white/10 hover:bg-white/10 text-muted-foreground hover:text-white"
+              title="Previous Project (A / Left)"
             >
               <ChevronLeft className="h-3.5 w-3.5" />
             </Button>
@@ -305,34 +234,12 @@ export const HUD: React.FC = () => {
               variant="outline"
               size="icon"
               onClick={nextProject}
-              className="h-7 w-7 rounded-sm"
-              title="Next Waypoint (D / Right)"
+              className="h-7 w-7 rounded-full border-white/10 hover:bg-white/10 text-muted-foreground hover:text-white"
+              title="Next Project (D / Right)"
             >
               <ChevronRight className="h-3.5 w-3.5" />
             </Button>
           </div>
-        </div>
-
-        {/* Technical Sub-telemetry */}
-        <div className="flex items-center justify-between text-[9px] text-muted-foreground tracking-wider border-t border-white/[0.04] pt-2">
-          <span className="hidden sm:inline">
-            TRAJECTORY: CATMULL-ROM 3D // INERTIA DAMPING ACTIVE
-          </span>
-          <span className="sm:hidden">
-            NAVIGATION: SCROLL / SWIPE
-          </span>
-
-          <span className="text-foreground">
-            {isIntroPhase
-              ? 'STATUS: EXPEDITION READY'
-              : isTerminus
-              ? 'STATUS: EXPEDITION COMPLETE // TERMINUS REACHED'
-              : isObservatoryPhase
-              ? 'STATUS: SYSTEMS OBSERVATORY // ARCHITECTURAL CODEX'
-              : currentProject
-              ? `TARGET: ${currentProject.title.slice(0, 22).toUpperCase()}`
-              : 'STATUS: 0 EXHIBITS (STANDBY)'}
-          </span>
         </div>
       </div>
     </div>
