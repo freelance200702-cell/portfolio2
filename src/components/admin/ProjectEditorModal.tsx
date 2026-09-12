@@ -306,7 +306,7 @@ export const ProjectEditorModal: React.FC<ProjectEditorModalProps> = ({
                   type="text"
                   value={title}
                   onChange={handleTitleChange}
-                  placeholder="e.g. Aether Engine: Vulkan Ray Tracer"
+                  placeholder="e.g. Project Title"
                   className="w-full px-3 py-2 rounded-lg bg-[#07070b] border border-white/[0.1] text-foreground text-xs focus:outline-none focus:border-primary/60"
                   required
                 />
@@ -320,7 +320,7 @@ export const ProjectEditorModal: React.FC<ProjectEditorModalProps> = ({
                   type="text"
                   value={slug}
                   onChange={(e) => setSlug(slugify(e.target.value))}
-                  placeholder="aether-engine"
+                  placeholder="project-slug"
                   className="w-full px-3 py-2 rounded-lg bg-[#07070b] border border-white/[0.1] text-foreground text-xs font-mono focus:outline-none focus:border-primary/60"
                   required
                 />
@@ -336,7 +336,7 @@ export const ProjectEditorModal: React.FC<ProjectEditorModalProps> = ({
                   type="text"
                   value={subtitle}
                   onChange={(e) => setSubtitle(e.target.value)}
-                  placeholder="Hardware-Accelerated Real-Time Ray Tracing"
+                  placeholder="e.g. System Architecture & Capabilities"
                   className="w-full px-3 py-2 rounded-lg bg-[#07070b] border border-white/[0.1] text-foreground text-xs focus:outline-none focus:border-primary/60"
                 />
               </div>
@@ -363,7 +363,7 @@ export const ProjectEditorModal: React.FC<ProjectEditorModalProps> = ({
                 type="text"
                 value={tagline}
                 onChange={(e) => setTagline(e.target.value)}
-                placeholder="Hardware-accelerated real-time ray tracing engine written in modern C++20 and Vulkan."
+                placeholder="Concise overview of project objectives and architecture."
                 className="w-full px-3 py-2 rounded-lg bg-[#07070b] border border-white/[0.1] text-foreground text-xs focus:outline-none focus:border-primary/60"
                 required
               />
@@ -522,7 +522,7 @@ export const ProjectEditorModal: React.FC<ProjectEditorModalProps> = ({
                 type="text"
                 value={technologiesStr}
                 onChange={(e) => setTechnologiesStr(e.target.value)}
-                placeholder="C++20, Vulkan, GLSL, CMake, Ray Tracing"
+                placeholder="TypeScript, WebGL, Rust, Three.js"
                 className="w-full px-3 py-2 rounded-lg bg-[#07070b] border border-white/[0.1] text-foreground text-xs font-mono focus:outline-none focus:border-primary/60"
               />
             </div>
@@ -535,7 +535,7 @@ export const ProjectEditorModal: React.FC<ProjectEditorModalProps> = ({
                 value={achievementsStr}
                 onChange={(e) => setAchievementsStr(e.target.value)}
                 rows={3}
-                placeholder="Sustained 60 FPS at 1440p resolution on RTX 4080 desktop hardware&#10;Zero-divergence Wavefront compute shader architecture yielding 34% higher SIMD utilization"
+                placeholder="Highlight verified project metrics or key architectural milestones&#10;e.g. Modular rendering pipeline with decoupled update passes"
                 className="w-full px-3 py-2 rounded-lg bg-[#07070b] border border-white/[0.1] text-foreground text-xs leading-relaxed focus:outline-none focus:border-primary/60"
               />
             </div>

@@ -2,60 +2,31 @@ import { getSupabaseClient } from './client';
 import type { Project, ProjectStatus } from '@/types/project';
 import type { Database } from '@/types/database.types';
 
-// Multi-project technical showcase demonstrating scalability
+// Neutral placeholder projects for exercising 3D journey and CMS infrastructure
 export const INITIAL_SEED_PROJECTS: Project[] = [
   {
-    id: 'proj-1',
-    title: 'Aether Engine: Vulkan Path Tracer',
-    slug: 'aether-engine',
-    subtitle: 'Hardware-Accelerated Real-Time Ray Tracing',
-    tagline: 'Hardware-accelerated real-time ray tracing engine written in modern C++20 and Vulkan.',
-    description_markdown: `### Aether Engine Overview
-A real-time path tracer built from scratch utilizing the Vulkan Ray Tracing API (VK_KHR_ray_tracing_pipeline). Designed for deterministic physical light simulation in interactive environments.
+    id: 'proj-alpha',
+    title: 'Project Alpha',
+    slug: 'project-alpha',
+    subtitle: 'Interactive 3D System Template',
+    tagline: 'Placeholder project showcasing interactive real-time 3D presentation.',
+    description_markdown: `### Project Alpha
+This is a neutral template project designed to test the 3D trajectory and content management system.
 
-#### Key Architecture Highlights
-- **Spatial Acceleration Structures**: Implements dynamic two-level BVH (Bottom-Level Acceleration Structure + Top-Level Acceleration Structure) with asynchronous GPU refitting for deformable animated meshes.
-- **Wavefront Integrator**: Decouples ray generation, surface BSDF evaluation, and shadow ray casting into separate compute passes, maximizing SM occupancy and reducing thread divergence.
-- **Denoising Pipeline**: Spatiotemporal Variance-Guided Filtering (SVGF) running directly in Vulkan compute shaders, achieving temporal accumulation across motion vectors with variance estimation.
-- **Microfacet Models**: GGX/Trowbridge-Reitz microfacet distribution with Smith geometric shadowing and multiple importance sampling (MIS) for direct lighting.`,
+#### Overview
+- Demonstrates 3D landmark rendering, camera targeting, and interaction.
+- Provides standard formatting for technical documentation and system notes.
+- Intended to be replaced with real project content via the administration dashboard.`,
     category: 'three_d_graphics',
-    technologies: ['C++20', 'Vulkan', 'GLSL', 'CMake', 'Ray Tracing', 'SIMD'],
-    live_demo_url: 'https://github.com',
-    github_repo_url: 'https://github.com',
+    technologies: ['TypeScript', 'WebGL', 'Three.js'],
+    live_demo_url: null,
+    github_repo_url: null,
     case_study_url: null,
-    thumbnail_url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
-    video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-    media_gallery: [
-      {
-        type: 'image',
-        url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
-        caption: 'Full spectral path-traced caustics and multi-bounce diffuse global illumination',
-      },
-      {
-        type: 'image',
-        url: 'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=1200&q=80',
-        caption: 'Two-level BVH spatial partitioning hierarchy visualization showing leaf clusters',
-      },
-      {
-        type: 'video',
-        url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-        caption: 'Real-time ray tracing walkthrough running at native 1440p',
-      },
-    ],
-    achievements: [
-      'Sustained 60 FPS at 1440p resolution on RTX 4080 desktop hardware with full dynamic lighting',
-      'Zero-divergence Wavefront compute shader architecture yielding 34% higher SIMD utilization',
-      'SVGF denoiser converging noisy 1-spp inputs into pristine real-time frames in under 2.8ms',
-      'Zero-allocation memory manager wrapping VMA (Vulkan Memory Allocator) with RAII lifetimes',
-    ],
-    technical_specs: [
-      { label: 'Graphics API', value: 'Vulkan 1.3 (VK_KHR_ray_tracing_pipeline)' },
-      { label: 'Integrator', value: 'Wavefront Path Tracer (Decoupled Compute Passes)' },
-      { label: 'Acceleration', value: 'TLAS/BLAS with SAH & Parallel GPU Refit' },
-      { label: 'Denoising', value: 'Spatiotemporal Variance-Guided Filtering (SVGF)' },
-      { label: 'Memory Model', value: 'Vulkan Memory Allocator (VMA) + Dedicated Staging' },
-      { label: 'Language Standard', value: 'ISO C++20 (Concepts, Coroutines, Modules)' },
-    ],
+    thumbnail_url: '',
+    video_url: null,
+    media_gallery: [],
+    achievements: [],
+    technical_specs: [],
     node_style: 'technical_installation',
     custom_model_url: null,
     node_color_primary: '#38bdf8',
@@ -68,55 +39,32 @@ A real-time path tracer built from scratch utilizing the Vulkan Ray Tracing API 
     updated_at: new Date().toISOString(),
   },
   {
-    id: 'proj-2',
-    title: 'SynapseNet: Distributed LLM Sharding',
-    slug: 'synapsenet',
-    subtitle: 'Tensor-Parallel Neural Cluster Inference',
-    tagline: 'High-throughput tensor-parallel framework for distributed deep learning inference.',
-    description_markdown: `### SynapseNet
-High-performance inference engine delivering zero-copy model execution across heterogeneous GPU clusters with minimal communication latency.
+    id: 'proj-beta',
+    title: 'Project Beta',
+    slug: 'project-beta',
+    subtitle: 'Data Architecture Template',
+    tagline: 'Placeholder project representing computational and data systems.',
+    description_markdown: `### Project Beta
+This is a neutral template project configured for exercising data monument archetypes and administration workflows.
 
-#### Technical Achievements
-- **Fused Kernel Fusion**: Custom CUDA kernels combining FlashAttention-2 with RMSNorm and SwiGLU activation layers.
-- **Ring All-Reduce**: Custom peer-to-peer communication primitives over InfiniBand RDMA and NVIDIA NCCL.
-- **Sub-millisecond TTFT**: Time-to-first-token reduced to 8.4ms through asynchronous KV-cache prefill and continuous batching.
-- **Quantization Support**: Native FP8 (E4M3/E5M2) matrix multiplication kernels utilizing tensor cores.`,
+#### Overview
+- Configured with neutral parameters for testing data synchronization and real-time updates.
+- Exercises data-driven state transitions between idle, approaching, and focused states.
+- Fully editable through the project editor and management console.`,
     category: 'ai_ml',
-    technologies: ['Rust', 'CUDA', 'PyTorch', 'NCCL', 'Triton', 'InfiniBand'],
+    technologies: ['Python', 'PostgreSQL', 'Docker'],
     live_demo_url: null,
-    github_repo_url: 'https://github.com',
+    github_repo_url: null,
     case_study_url: null,
-    thumbnail_url: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1200&q=80',
+    thumbnail_url: '',
     video_url: null,
-    media_gallery: [
-      {
-        type: 'image',
-        url: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1200&q=80',
-        caption: 'Distributed GPU memory topology and cross-node ring-reduce interconnects',
-      },
-      {
-        type: 'image',
-        url: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80',
-        caption: 'Token latency benchmarks showing linear scaling across 32 H100 SXM nodes',
-      },
-    ],
-    achievements: [
-      'Delivered 2,400 tokens/sec sustained throughput on 70B parameter models across 4x A100 nodes',
-      'Cut inter-GPU communication overhead by 42% via custom ring all-reduce CUDA kernels',
-      'Engineered continuous batching scheduler achieving 98.4% GPU tensor core saturation',
-      'Engineered lock-free pinned host-to-device streaming buffer for multi-terabyte weights',
-    ],
-    technical_specs: [
-      { label: 'Parallelism', value: 'Megatron-style Tensor Parallelism + Pipeline Sharding' },
-      { label: 'Attention Mechanism', value: 'FlashAttention-2 Fused CUDA Kernels' },
-      { label: 'Interconnect', value: 'NVIDIA NCCL 2.18 + RoCEv2 / InfiniBand RDMA' },
-      { label: 'Quantization', value: 'FP8 Matrix Engine (E4M3/E5M2) + Int4 Weight Unpack' },
-      { label: 'Host Runtime', value: 'Rust Engine with Tokio Actor Concurrency' },
-    ],
+    media_gallery: [],
+    achievements: [],
+    technical_specs: [],
     node_style: 'data_monument',
-    node_color_primary: '#f59e0b',
-    node_color_secondary: '#d97706',
-    year: '2025',
+    node_color_primary: '#818cf8',
+    node_color_secondary: '#4f46e5',
+    year: '2026',
     sort_order: 1,
     featured: true,
     status: 'published',
@@ -124,201 +72,34 @@ High-performance inference engine delivering zero-copy model execution across he
     updated_at: new Date().toISOString(),
   },
   {
-    id: 'proj-3',
-    title: 'Chronos OS: Microkernel in Rust',
-    slug: 'chronos-os',
-    subtitle: 'Preemptive Capability-Based Operating System',
-    tagline: 'Formally verified preemptive microkernel with capability-based security architecture.',
-    description_markdown: `### Chronos Microkernel
-A bare-metal x86_64 operating system designed for deterministic robotics and aerospace edge computing with provable isolation guarantees.
+    id: 'proj-gamma',
+    title: 'Project Gamma',
+    slug: 'project-gamma',
+    subtitle: 'Systems Engineering Template',
+    tagline: 'Placeholder project demonstrating low-level systems and structural landmarks.',
+    description_markdown: `### Project Gamma
+This is a neutral template project configured for testing structural architectural landmarks.
 
-#### Systems Capabilities
-- **Capability-Based Security**: Object-capability model where access to hardware resources, pages, and channels requires unforgeable cryptographic tokens.
-- **Zero-Copy IPC**: Synchronous and asynchronous inter-process communication using grant/call semantics over memory remapping.
-- **Deterministic Scheduler**: O(1) multi-priority priority ceiling scheduler immune to priority inversion.
-- **Lock-Free Allocator**: Buddy allocation scheme guaranteeing non-fragmenting bounded-time heap allocations.`,
+#### Overview
+- Provides an example structural landmark along the 3D spline trajectory.
+- Used to verify distance culling, responsive overlays, and route navigation.
+- Ready to be updated with production project details and verified assets.`,
     category: 'systems_engine',
-    technologies: ['Rust', 'x86_64 Assembly', 'QEMU', 'Linker Scripts', 'GDB'],
+    technologies: ['Rust', 'Linux', 'C++'],
     live_demo_url: null,
-    github_repo_url: 'https://github.com',
+    github_repo_url: null,
     case_study_url: null,
-    thumbnail_url: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80',
+    thumbnail_url: '',
     video_url: null,
-    media_gallery: [
-      {
-        type: 'image',
-        url: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80',
-        caption: 'Kernel space vs user space capability boundary memory architecture diagram',
-      },
-      {
-        type: 'image',
-        url: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80',
-        caption: 'Chronos boot sequence and serial console driver executing in QEMU emulator',
-      },
-    ],
-    achievements: [
-      'Sub-microsecond roundtrip IPC latency (340 nanoseconds on modern AMD Zen 4 cores)',
-      '100% memory safety and data-race freedom guaranteed at compile-time via Rust type system',
-      'Microkernel core footprint under 180 Kilobytes of compiled machine instructions',
-      'Deterministic bounded context-switch timing under 120 cycles',
-    ],
-    technical_specs: [
-      { label: 'Architecture Target', value: 'x86_64 (Intel VT-x / AMD-V Ready)' },
-      { label: 'Kernel Paradigm', value: 'L4-derivative Capability Microkernel' },
-      { label: 'IPC Latency', value: '340ns Roundtrip (Fastpath Syscall Remap)' },
-      { label: 'Virtual Memory', value: '4-Level 64-bit Paging (CR3 Management)' },
-      { label: 'Security Model', value: 'Cryptographic Object-Capabilities (No Superuser)' },
-    ],
+    media_gallery: [],
+    achievements: [],
+    technical_specs: [],
     node_style: 'architectural_structure',
     node_color_primary: '#10b981',
     node_color_secondary: '#059669',
-    year: '2025',
+    year: '2026',
     sort_order: 2,
-    featured: true,
-    status: 'published',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'proj-4',
-    title: 'VoxelWorld: Infinite Procedural Engine',
-    slug: 'voxelworld',
-    subtitle: 'GPU Dual-Contouring & Rollback Netcode',
-    tagline: 'Custom voxel engine with compute-shader terrain generation and deterministic rollback netcode.',
-    description_markdown: `### VoxelWorld Engine
-A networked voxel sandbox handling millions of destructible voxels with real-time greedy meshing and seamless planet-scale streaming.
-
-#### Architecture
-- **Dual Contouring Extraction**: Sharp feature preservation on GPU compute shaders directly extracting isosurfaces from signed distance fields (SDFs).
-- **Rollback Netcode**: Deterministic lockstep state machines with rollback prediction over WebRTC UDP data channels.
-- **Sparse Voxel Octree (SVO)**: Level-of-detail hierarchy streaming 64km view distances while maintaining 16ms frame budgets.`,
-    category: 'game_dev',
-    technologies: ['C#', 'HLSL', 'Compute Shaders', 'WebRTC', 'Voxel Meshing', 'SIMD'],
-    live_demo_url: 'https://github.com',
-    github_repo_url: 'https://github.com',
-    case_study_url: null,
-    thumbnail_url: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80',
-    video_url: null,
-    media_gallery: [
-      {
-        type: 'image',
-        url: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80',
-        caption: 'Real-time procedural planetary terrain rendered via compute shader dual contouring',
-      },
-    ],
-    achievements: [
-      'Real-time extraction of 120 million voxel cells per second via GPU compute shaders',
-      'Rollback netcode compensating up to 250ms of network jitter with 0 visible artifacts',
-      'Greedy meshing algorithm reducing raw mesh triangle count by 78%',
-    ],
-    technical_specs: [
-      { label: 'Extraction Method', value: 'GPU Dual Contouring from Hermite SDF Data' },
-      { label: 'Spatial Indexing', value: 'Linear Sparse Voxel Octrees (SVO) with Morton Codes' },
-      { label: 'Networking', value: 'Deterministic Rollback over WebRTC DataChannels' },
-      { label: 'Target Frame Rate', value: '144 FPS locked at 1080p' },
-    ],
-    node_style: 'miniature_environment',
-    node_color_primary: '#e2e8f0',
-    node_color_secondary: '#94a3b8',
-    year: '2024',
-    sort_order: 3,
     featured: false,
-    status: 'published',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'proj-5',
-    title: 'Hyperion: Distributed Time-Series Engine',
-    slug: 'hyperion',
-    subtitle: 'Log-Structured Append Storage Architecture',
-    tagline: 'Log-structured append-only time series engine processing 12M events/sec.',
-    description_markdown: `### Hyperion Engine
-Ultra low-latency event broker designed for high-frequency financial telemetry and observability.
-
-#### Systems Highlights
-- **Zero-Copy I/O**: Direct kernel sendfile transitions and memory-mapped append logs bypassing userland copies.
-- **Raft Consensus**: Multi-raft consensus engine partitioning metrics into independent Raft groups for linear write scalability.
-- **Gorilla Compression**: Delta-of-delta timestamp encoding paired with XOR floating-point compression yielding an 85% reduction in disk storage.`,
-    category: 'systems_engine',
-    technologies: ['Go', 'TypeScript', 'gRPC', 'Protobuf', 'Raft', 'eBPF'],
-    live_demo_url: 'https://github.com',
-    github_repo_url: 'https://github.com',
-    case_study_url: null,
-    thumbnail_url: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80',
-    video_url: null,
-    media_gallery: [
-      {
-        type: 'image',
-        url: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80',
-        caption: 'High-frequency telemetry pipeline architecture and LSM partition compaction tree',
-      },
-    ],
-    achievements: [
-      'Ingestion rate exceeding 12,000,000 metrics/second on a single 32-core bare-metal instance',
-      'Compression ratio of 1.37 bytes per time-series sample (85% reduction over raw telemetry)',
-      'Sub-millisecond query evaluation over 10-billion-row historical time ranges',
-    ],
-    technical_specs: [
-      { label: 'Storage Engine', value: 'Log-Structured Merge Tree (LSM) + mmap Append Log' },
-      { label: 'Compression', value: 'Gorilla Delta-of-Delta + XOR Float Packing' },
-      { label: 'Consensus', value: 'Multi-Raft Protocol with Async Leader Election' },
-      { label: 'Network Protocol', value: 'High-Throughput gRPC + Protobuf over HTTP/2' },
-    ],
-    node_style: 'studio_workspace',
-    node_color_primary: '#f97316',
-    node_color_secondary: '#ea580c',
-    year: '2024',
-    sort_order: 4,
-    featured: false,
-    status: 'published',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'proj-6',
-    title: 'OpticMesh: WebGPU Neural Radiance Fields',
-    slug: 'opticmesh',
-    subtitle: 'In-Browser Real-Time Instant-NGP Renderer',
-    tagline: 'Real-time neural radiance field volumetric rendering in the browser using WebGPU compute shaders.',
-    description_markdown: `### OpticMesh NeRF
-A production WebGPU implementation of multi-resolution hash encoding for instant volumetric reconstruction and photorealistic rendering.
-
-#### Technical Highlights
-- **WGSL Ray Marching**: Highly parallel ray marching through density fields in WebGPU compute shaders.
-- **Tensor Core Simulation**: Half-precision floating point matrix evaluation simulated directly inside GPU shader invocations.
-- **Zero Dependencies**: Pure WebGPU rendering pipeline running client-side without external backend compute nodes.`,
-    category: 'three_d_graphics',
-    technologies: ['WebGPU', 'WGSL', 'TypeScript', 'NeRF', 'Compute Shaders', 'Three.js'],
-    live_demo_url: 'https://github.com',
-    github_repo_url: 'https://github.com',
-    case_study_url: null,
-    thumbnail_url: 'https://images.unsplash.com/photo-1507499739999-097706ad8914?auto=format&fit=crop&w=1200&q=80',
-    video_url: null,
-    media_gallery: [
-      {
-        type: 'image',
-        url: 'https://images.unsplash.com/photo-1507499739999-097706ad8914?auto=format&fit=crop&w=1200&q=80',
-        caption: 'Volumetric radiance field reconstruction displaying continuous novel viewpoints',
-      },
-    ],
-    achievements: [
-      '60 FPS sustained rendering at native 1080p directly in browser canvases without plugins',
-      'Optimized multiresolution hash table query reducing compute shader cache misses by 63%',
-      'Volumetric occupancy grid acceleration skipping 88% of empty space during ray marching',
-    ],
-    technical_specs: [
-      { label: 'Graphics API', value: 'W3C WebGPU with WebGPU Shading Language (WGSL)' },
-      { label: 'Volumetric Model', value: 'Instant-NGP Multi-Resolution Hash Encoding' },
-      { label: 'Shader Architecture', value: 'Decoupled Raymarch Compute + Blit Render Pipeline' },
-      { label: 'Target Frame Rate', value: '60 FPS at 1080p in Chromium / Firefox' },
-    ],
-    node_style: 'cyber_terminal',
-    node_color_primary: '#38bdf8',
-    node_color_secondary: '#0369a1',
-    year: '2023',
-    sort_order: 5,
-    featured: true,
     status: 'published',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),

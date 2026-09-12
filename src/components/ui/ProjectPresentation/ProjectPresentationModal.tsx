@@ -351,7 +351,7 @@ export const ProjectPresentationModal: React.FC<ProjectPresentationModalProps> =
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-4">
                     <div className="flex items-center justify-between">
                       <span className="px-2 py-0.5 rounded-sm bg-black/70 border border-white/20 font-mono text-[10px] text-white/80">
-                        HD VIDEO TELEMETRY
+                        VIDEO PREVIEW
                       </span>
                     </div>
 
@@ -391,7 +391,7 @@ export const ProjectPresentationModal: React.FC<ProjectPresentationModalProps> =
                     </div>
                   </div>
                 </div>
-              ) : (
+              ) : activeProject.thumbnail_url ? (
                 <div className="relative aspect-video sm:aspect-[21/9] w-full overflow-hidden">
                   <img
                     src={activeProject.thumbnail_url}
@@ -400,9 +400,21 @@ export const ProjectPresentationModal: React.FC<ProjectPresentationModalProps> =
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#05050a] via-transparent to-transparent opacity-80" />
                   <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between font-mono text-[10px] text-muted-foreground">
-                    <span>STATUS // LIVE RUNTIME VERIFIED</span>
-                    <span>RESOLUTION // 4K NATIVE</span>
+                    <span>EXHIBIT PREVIEW</span>
+                    <span>3D LANDMARK LINKED</span>
                   </div>
+                </div>
+              ) : (
+                <div className="relative aspect-video sm:aspect-[21/9] w-full flex flex-col items-center justify-center bg-[#080814] p-6 text-center border border-white/[0.06]">
+                  <div className="h-12 w-12 rounded-sm border border-white/10 bg-white/[0.02] flex items-center justify-center mb-3 text-muted-foreground">
+                    <Terminal className="h-6 w-6 text-primary/70" />
+                  </div>
+                  <span className="font-mono text-xs text-foreground/80 tracking-wider mb-1 uppercase">
+                    {activeProject.title} // 3D LANDMARK EXHIBIT
+                  </span>
+                  <p className="font-mono text-[11px] text-muted-foreground max-w-md">
+                    Custom media asset slot. Upload project screenshots, schematics, or video walk-throughs in the admin dashboard.
+                  </p>
                 </div>
               )}
             </div>
@@ -436,13 +448,13 @@ export const ProjectPresentationModal: React.FC<ProjectPresentationModalProps> =
             </section>
           )}
 
-          {/* SECTION C: KEY ENGINEERING BREAKTHROUGHS / ACHIEVEMENTS */}
+          {/* SECTION C: KEY HIGHLIGHTS / ACHIEVEMENTS */}
           {activeProject.achievements && activeProject.achievements.length > 0 && (
             <section className="space-y-4">
               <div className="flex items-center gap-2 border-b border-white/[0.08] pb-3">
                 <CheckCircle2 className="h-4 w-4 text-emerald-400" />
                 <MonoLabel className="text-xs tracking-[0.18em] text-foreground font-semibold">
-                  ENGINEERING BREAKTHROUGHS & PROVABLE METRICS
+                  KEY HIGHLIGHTS & ARCHITECTURAL ACHIEVEMENTS
                 </MonoLabel>
               </div>
 

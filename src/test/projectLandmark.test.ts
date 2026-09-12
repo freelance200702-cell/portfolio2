@@ -35,7 +35,7 @@ describe('ProjectLandmark Architectural System', () => {
     });
 
     it('ensures all initial seed projects are mapped to distinct, non-generic landmark archetypes', () => {
-      expect(INITIAL_SEED_PROJECTS.length).toBeGreaterThanOrEqual(5);
+      expect(INITIAL_SEED_PROJECTS.length).toBe(3);
 
       const resolvedArchetypes = INITIAL_SEED_PROJECTS.map((p) =>
         resolveLandmarkArchetype(p.node_style, p.category)
@@ -54,12 +54,10 @@ describe('ProjectLandmark Architectural System', () => {
         ]).toContain(arch);
       }
 
-      // Check specific seed project assignments
-      expect(resolvedArchetypes[0]).toBe('technical_installation'); // Aether Engine (Vulkan)
-      expect(resolvedArchetypes[1]).toBe('data_monument');          // SynapseNet (LLM Sharding)
-      expect(resolvedArchetypes[2]).toBe('architectural_structure'); // Chronos OS (Microkernel)
-      expect(resolvedArchetypes[3]).toBe('miniature_environment');    // VoxelWorld (Procedural)
-      expect(resolvedArchetypes[4]).toBe('studio_workspace');        // Hyperion (Telemetry Engine)
+      // Check specific placeholder project assignments
+      expect(resolvedArchetypes[0]).toBe('technical_installation'); // Project Alpha
+      expect(resolvedArchetypes[1]).toBe('data_monument');          // Project Beta
+      expect(resolvedArchetypes[2]).toBe('architectural_structure'); // Project Gamma
     });
   });
 

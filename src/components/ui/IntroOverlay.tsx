@@ -44,8 +44,8 @@ export const IntroOverlay: React.FC = () => {
 
         {/* 4. Concise Capability Statement */}
         <p className="text-xs sm:text-sm font-sans text-muted-foreground max-w-lg leading-relaxed mb-6 sm:mb-8 px-2">
-          Architecting hardware-accelerated rendering pipelines, distributed deep learning clusters,
-          and low-latency microkernel systems.
+          An interactive 3D spatial developer journey featuring real-time procedural landmarks,
+          camera choreography, and administration systems.
         </p>
 
         {/* 5. Primary Cinematic CTA */}
