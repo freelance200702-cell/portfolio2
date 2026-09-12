@@ -3,7 +3,10 @@ import { useJourneyStore } from '@/stores/useJourneyStore';
 import { generateSplineCurve, calculateProjectPlacements } from '@/lib/splineMath';
 import { SplineRoad } from './SplineRoad';
 import { ProjectNode } from './ProjectNode';
-import { Environment } from './Environment';
+import { AtmosphericSky } from './world/AtmosphericSky';
+import { AtmosphericLighting } from './world/AtmosphericLighting';
+import { TerrainLandscape } from './world/TerrainLandscape';
+import { DistantScenery } from './world/DistantScenery';
 import { JourneyController } from './JourneyController';
 import { DepartureThreshold } from './DepartureThreshold';
 import { SystemsObservatory } from './SystemsObservatory/SystemsObservatory';
@@ -21,19 +24,25 @@ export const Scene: React.FC = () => {
 
   return (
     <>
-      {/* 1. Atmospheric Environment & Horizon Grid */}
-      <Environment />
+      {/* 1. Atmospheric Lighting & Aerial Fog */}
+      <AtmosphericLighting />
 
-      {/* 2. Departure Threshold (Physical 3D origin at t = 0) */}
+      {/* 2. Celestial Sky Dome & Atmospheric Horizon Gradient */}
+      <AtmosphericSky />
+
+      {/* 3. Foundational Planetary Bedrock & Canyon Terraces */}
+      <TerrainLandscape curve={curve} />
+
+      {/* 4. Distant Architectural Monoliths & Telemetry Beacons */}
+      <DistantScenery curve={curve} />
+
+      {/* 5. Departure Threshold Launch Promenade & Framing Portal (t = 0) */}
       <DepartureThreshold />
 
-      {/* 3. Reusable JourneyController (adaptive look-ahead, spline physics, banking, inspection) */}
-      <JourneyController curve={curve} projectPlacements={projectPlacements} />
-
-      {/* 4. Multi-layered Illuminated Spline Road */}
+      {/* 6. Multi-layered Illuminated Viaduct Highway */}
       <SplineRoad projects={projects} />
 
-      {/* 5. Proximity-Awakened Architectural Project Exhibits */}
+      {/* 7. Proximity-Awakened Architectural Project Exhibit Pavilions */}
       {projectPlacements.map(({ project, position, tangent, index, t, rotationY }) => (
         <ProjectNode
           key={project.id}
@@ -46,11 +55,14 @@ export const Scene: React.FC = () => {
         />
       ))}
 
-      {/* 6. Systems Observatory (About & Engineering Disciplines Pavilion at t = 0.885) */}
+      {/* 8. Systems Observatory (About & Engineering Disciplines Pavilion at t = 0.885) */}
       <SystemsObservatory curve={curve} />
 
-      {/* 7. Terminal Threshold (Ending Section at t = 0.965) */}
+      {/* 9. Terminal Threshold (Ending Section at t = 0.965) */}
       <TerminalThreshold curve={curve} />
+
+      {/* 10. Unified JourneyController (Spline physics, banking roll, exhibit inspection) */}
+      <JourneyController curve={curve} projectPlacements={projectPlacements} />
     </>
   );
 };

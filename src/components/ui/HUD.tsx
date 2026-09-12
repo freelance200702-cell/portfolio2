@@ -49,16 +49,16 @@ export const HUD: React.FC = () => {
 
   return (
     <div className="fixed inset-0 pointer-events-none z-20 flex flex-col justify-between p-4 sm:p-6 select-none font-mono">
-      {/* 1. Viewfinder Framing Reticles (Corner Crosshairs) */}
-      <div className="absolute top-4 left-4 w-4 h-4 border-t border-l border-white/20 pointer-events-none" />
-      <div className="absolute top-4 right-4 w-4 h-4 border-t border-r border-white/20 pointer-events-none" />
-      <div className="absolute bottom-4 left-4 w-4 h-4 border-b border-l border-white/20 pointer-events-none" />
-      <div className="absolute bottom-4 right-4 w-4 h-4 border-b border-r border-white/20 pointer-events-none" />
+      {/* 1. Viewfinder Framing Reticles (Subtle hairline accents) */}
+      <div className="absolute top-4 left-4 w-3 h-3 border-t border-l border-white/[0.08] pointer-events-none" />
+      <div className="absolute top-4 right-4 w-3 h-3 border-t border-r border-white/[0.08] pointer-events-none" />
+      <div className="absolute bottom-4 left-4 w-3 h-3 border-b border-l border-white/[0.08] pointer-events-none" />
+      <div className="absolute bottom-4 right-4 w-3 h-3 border-b border-r border-white/[0.08] pointer-events-none" />
 
       {/* 2. Top Header Navigation Bar */}
-      <div className="flex items-center justify-between gap-4 w-full mt-12 sm:mt-0">
+      <div className="flex items-center justify-between gap-4 w-full mt-14 sm:mt-14">
         {/* Minimalist Discipline Filter Tabs & Systems Observatory Link (Desktop) */}
-        <div className="pointer-events-auto hidden sm:flex items-center border border-white/[0.08] bg-[#050508]/60 backdrop-blur-md px-1 py-0.5 rounded-sm">
+        <div className="pointer-events-auto hidden sm:flex items-center border border-white/[0.06] bg-[#090d16]/45 backdrop-blur-xl px-1 py-0.5 rounded-sm">
           {CATEGORIES.map((cat) => (
             <button
               key={cat.id}
@@ -102,7 +102,7 @@ export const HUD: React.FC = () => {
         </div>
 
         {/* Telemetry & Quality Controls */}
-        <div className="pointer-events-auto ml-auto flex items-center gap-2 border border-white/[0.08] bg-[#050508]/60 backdrop-blur-md px-2 py-1 rounded-sm text-[10px]">
+        <div className="pointer-events-auto ml-auto flex items-center gap-2 border border-white/[0.06] bg-[#090d16]/45 backdrop-blur-xl px-2 py-1 rounded-sm text-[10px]">
           <span className="text-muted-foreground hidden md:inline">
             EXPEDITION // {progressPercent}%
           </span>
@@ -143,7 +143,7 @@ export const HUD: React.FC = () => {
       {currentProject && !isIntroPhase && !isTerminus && !isObservatoryPhase && (
         <div
           onClick={() => selectProject(currentProject)}
-          className="pointer-events-auto hidden md:flex flex-col gap-1.5 p-4 max-w-sm rounded-sm border border-white/[0.08] bg-[#050508]/70 backdrop-blur-xl self-start mt-auto mb-auto cursor-pointer group hover:border-white/30 transition-all shadow-2xl animate-fade-in"
+          className="pointer-events-auto hidden md:flex flex-col gap-1.5 p-4 max-w-sm rounded-sm border border-white/[0.08] bg-[#090d16]/55 backdrop-blur-2xl self-start mt-auto mb-auto cursor-pointer group hover:border-white/30 transition-all shadow-2xl animate-fade-in"
         >
           <div className="flex items-center justify-between text-[10px] text-muted-foreground border-b border-white/[0.06] pb-2">
             <span className="tracking-widest">
@@ -221,7 +221,7 @@ export const HUD: React.FC = () => {
       )}
 
       {/* 4. Bottom Viewfinder HUD: Precision Scrubber & Trajectory Telemetry */}
-      <div className="pointer-events-auto flex flex-col gap-2 max-w-2xl w-full mx-auto p-3 sm:p-4 rounded-sm border border-white/[0.08] bg-[#050508]/80 backdrop-blur-2xl shadow-2xl">
+      <div className="pointer-events-auto flex flex-col gap-2 max-w-2xl w-full mx-auto p-3 sm:p-4 rounded-sm border border-white/[0.08] bg-[#090d16]/55 backdrop-blur-2xl shadow-2xl">
         {/* Progress Timeline Scrubber */}
         <div className="flex items-center gap-3">
           <span className="text-[10px] tracking-wider text-muted-foreground w-12 text-left">

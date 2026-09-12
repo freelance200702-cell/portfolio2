@@ -18,6 +18,30 @@ interface ProjectNodeProps {
   rotationY?: number;
 }
 
+/**
+ * Resilient error boundary to safeguard R3F from broken image assets
+ */
+class ThumbnailErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean }
+> {
+  state = { hasError: false };
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  override render() {
+    if (this.state.hasError) {
+      return (
+        <mesh position={[0, 0, 0.02]}>
+          <planeGeometry args={[3.0, 1.6]} />
+          <meshBasicMaterial color="#0c101c" />
+        </mesh>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 export const ProjectNode: React.FC<ProjectNodeProps> = ({
   project,
   position,
@@ -30,7 +54,7 @@ export const ProjectNode: React.FC<ProjectNodeProps> = ({
   const ringRef = useRef<THREE.Mesh>(null);
   const beaconRef = useRef<THREE.Mesh>(null);
   const previewGroupRef = useRef<THREE.Group>(null);
-  const textGroupRef = useRef<THREE.Group>(null);
+  const lightRef = useRef<THREE.PointLight>(null);
 
   const [hovered, setHovered] = useState(false);
 
@@ -44,7 +68,6 @@ export const ProjectNode: React.FC<ProjectNodeProps> = ({
 
   // Dynamic visual state evaluation
   const [currentState, setCurrentState] = useState<NodeVisualState>('idle');
-  // Proximity-triggered lazy asset loading flag (avoids distant texture/asset downloads)
   const [hasBeenApproached, setHasBeenApproached] = useState(false);
 
   // Format index string (e.g. "01", "02")
@@ -54,9 +77,12 @@ export const ProjectNode: React.FC<ProjectNodeProps> = ({
     const currentProgress = useJourneyStore.getState().currentProgress;
     const dist = Math.abs(currentProgress - t);
 
-    // Deep fog culling: If traveler is far away (>22% track away), skip all CPU rotations & updates
+    // Deep fog culling: If traveler is far away (>22% track away), skip all CPU updates
     if (dist > 0.22 && !isSelected && !hovered) {
       if (currentState !== 'idle') setCurrentState('idle');
+      if (lightRef.current && lightRef.current.intensity > 0) {
+        lightRef.current.intensity = 0;
+      }
       return;
     }
 
@@ -113,7 +139,7 @@ export const ProjectNode: React.FC<ProjectNodeProps> = ({
       beaconRef.current.scale.set(targetScale, 1, targetScale);
     }
 
-    // 3. Floating 3D Holographic Project Preview Panel (Revealed when focused)
+    // 3. Floating 3D Holographic Project Preview Panel
     const targetPreviewOpacity = isFocused ? 1.0 : 0.0;
     previewOpacityRef.current = THREE.MathUtils.damp(
       previewOpacityRef.current,
@@ -128,7 +154,7 @@ export const ProjectNode: React.FC<ProjectNodeProps> = ({
       previewGroupRef.current.scale.setScalar(targetScale);
     }
 
-    // 4. Emissive Highlight Scaling
+    // 4. Emissive Highlight & Point Light Scaling
     if (outerCoreRef.current) {
       const coreMat = outerCoreRef.current.material as THREE.MeshStandardMaterial;
       if (coreMat) {
@@ -141,59 +167,107 @@ export const ProjectNode: React.FC<ProjectNodeProps> = ({
         );
       }
     }
+
+    if (lightRef.current) {
+      const targetLightIntensity = isFocused ? 2.8 : state === 'approaching' ? 1.4 : 0.4;
+      lightRef.current.intensity = THREE.MathUtils.damp(
+        lightRef.current.intensity,
+        targetLightIntensity,
+        4.0,
+        delta
+      );
+    }
   });
 
   return (
     <group position={position} rotation={[0, rotationY, 0]}>
-      {/* 1. Milled Dark Titanium Architectural Pedestal */}
-      <group position={[0, -0.4, 0]}>
-        {/* Tier 1: Lower Heavy Plinth */}
-        <mesh position={[0, 0, 0]}>
-          <cylinderGeometry args={[2.0, 2.3, 0.35, 32]} />
+      {/* 1. Structural Sub-Platform Foundation (Grounded down to planetary floor at y = -0.6) */}
+      <mesh position={[0, -1.0, 0]} receiveShadow>
+        <cylinderGeometry args={[2.2, 2.6, 1.8, 24]} />
+        <meshStandardMaterial
+          color="#06080e"
+          roughness={0.5}
+          metalness={0.82}
+        />
+      </mesh>
+
+      {/* 2. Cantilevered Architectural Plinth Platform */}
+      <group position={[0, -0.15, 0]}>
+        {/* Tier 1: Heavy Base Deck */}
+        <mesh position={[0, 0, 0]} receiveShadow castShadow>
+          <cylinderGeometry args={[2.1, 2.3, 0.35, 32]} />
           <meshStandardMaterial
-            color="#07070b"
+            color="#090c14"
             roughness={0.25}
             metalness={0.92}
           />
         </mesh>
 
-        {/* Tier 2: Recessed Hairline Optical Seam */}
+        {/* Tier 2: Recessed Signature Optical Seam */}
         <mesh position={[0, 0.2, 0]}>
-          <torusGeometry args={[1.8, 0.02, 16, 64]} />
+          <torusGeometry args={[1.9, 0.025, 16, 64]} />
           <meshBasicMaterial
-            color={project.node_color_primary}
+            color={project.node_color_primary || '#38bdf8'}
             transparent
-            opacity={currentState === 'idle' ? 0.35 : 0.85}
+            opacity={currentState === 'idle' ? 0.4 : 0.9}
           />
         </mesh>
 
-        {/* Tier 3: Upper Platform */}
-        <mesh position={[0, 0.28, 0]}>
-          <cylinderGeometry args={[1.65, 1.75, 0.22, 32]} />
+        {/* Tier 3: Upper Exhibit Plinth */}
+        <mesh position={[0, 0.28, 0]} receiveShadow>
+          <cylinderGeometry args={[1.7, 1.8, 0.22, 32]} />
           <meshStandardMaterial
-            color="#0d0d14"
+            color="#0e121d"
             roughness={0.3}
             metalness={0.88}
           />
         </mesh>
       </group>
 
-      {/* 2. Collimated Vertical Pencil Light Column */}
-      <mesh ref={beaconRef} position={[0, 7, 0]}>
-        <cylinderGeometry args={[0.03, 0.25, 14, 16]} />
+      {/* 3. Architectural Canopy Frame (Framing the exhibit) */}
+      <group position={[0, 2.4, -0.6]}>
+        {/* Rear Support Column */}
+        <mesh position={[0, 0.2, -0.8]} castShadow>
+          <boxGeometry args={[0.3, 3.4, 0.3]} />
+          <meshStandardMaterial color="#0c101c" roughness={0.3} metalness={0.9} />
+        </mesh>
+        {/* Overhead Cantilever Visor */}
+        <mesh position={[0, 1.8, 0]} castShadow>
+          <boxGeometry args={[2.6, 0.15, 1.8]} />
+          <meshStandardMaterial color="#0c101c" roughness={0.3} metalness={0.9} />
+        </mesh>
+      </group>
+
+      {/* 4. Collimated Skyward Beacon Shaft */}
+      <mesh ref={beaconRef} position={[0, 14, 0]}>
+        <cylinderGeometry args={[0.06, 0.25, 28, 16]} />
         <meshBasicMaterial
-          color={project.node_color_primary}
+          color={project.node_color_primary || '#38bdf8'}
           transparent
-          opacity={0.04}
+          opacity={0.03}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
         />
       </mesh>
 
-      {/* 3. Sculptural Quantum Polyhedron Artifact */}
-      <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.4}>
+      {/* 5. Soft Architectural Spotlight illuminating the exhibit */}
+      <pointLight
+        ref={lightRef}
+        position={[0, 3.2, 0.5]}
+        color={project.node_color_primary || '#38bdf8'}
+        intensity={0.4}
+        distance={9}
+        decay={2}
+      />
+
+      {/* 6. Kinetic Exhibit Core (3D Model or Quantum Artifact) */}
+      <Float
+        speed={currentState === 'idle' ? 1.0 : 1.8}
+        rotationIntensity={0.2}
+        floatIntensity={0.35}
+      >
         <group
-          position={[0, 1.9, 0]}
+          position={[0, 1.6, 0]}
           onClick={(e) => {
             e.stopPropagation();
             selectProject(project);
@@ -208,8 +282,7 @@ export const ProjectNode: React.FC<ProjectNodeProps> = ({
             document.body.style.cursor = 'auto';
           }}
         >
-          {/* Custom 3D Model or Procedural Quantum Polyhedron */}
-          {project.node_style === 'custom_glb' && project.custom_model_url ? (
+          {project.custom_model_url ? (
             <LazyGLBModel
               url={project.custom_model_url}
               primaryColor={project.node_color_primary}
@@ -218,111 +291,84 @@ export const ProjectNode: React.FC<ProjectNodeProps> = ({
               isSelected={isSelected}
             />
           ) : (
-            <>
-              {/* Outer Faceted Obsidian Polyhedron */}
-              <mesh ref={outerCoreRef}>
-                <octahedronGeometry args={[hovered ? 1.2 : 1.05, 0]} />
+            <group>
+              {/* Outer Faceted Titanium Core */}
+              <mesh ref={outerCoreRef} castShadow>
+                <octahedronGeometry args={[hovered ? 1.15 : 1.0, 0]} />
                 <meshStandardMaterial
-                  color="#0a0f1d"
-                  emissive={project.node_color_primary}
-                  emissiveIntensity={0.5}
-                  roughness={0.12}
+                  color="#090d16"
+                  emissive={project.node_color_primary || '#38bdf8'}
+                  emissiveIntensity={0.6}
+                  roughness={0.15}
                   metalness={0.92}
                   transparent
                   opacity={0.94}
                 />
               </mesh>
 
-              {/* Inner Precision Wireframe Lattice */}
+              {/* Inner Optical Lattice */}
               <mesh ref={innerCoreRef}>
-                <icosahedronGeometry args={[0.7, 0]} />
+                <icosahedronGeometry args={[0.65, 0]} />
                 <meshBasicMaterial
-                  color={project.node_color_secondary}
+                  color={project.node_color_secondary || '#818cf8'}
                   wireframe
+                  transparent
+                  opacity={0.7}
+                />
+              </mesh>
+
+              {/* Quantum Equatorial Ring */}
+              <mesh ref={ringRef} rotation={[Math.PI / 3, 0, 0]}>
+                <torusGeometry args={[1.4, 0.02, 16, 48]} />
+                <meshBasicMaterial
+                  color={project.node_color_primary || '#38bdf8'}
                   transparent
                   opacity={0.6}
                 />
               </mesh>
-            </>
+            </group>
           )}
 
-          {/* Precision Gimbal Ring */}
-          <mesh ref={ringRef} rotation={[Math.PI / 3, 0, 0]}>
-            <torusGeometry args={[1.75, 0.015, 12, 64]} />
-            <meshBasicMaterial
-              color="#64748b"
-              transparent
-              opacity={0.4}
-            />
-          </mesh>
-
-          {/* Featured Exhibit Orbital Gold/Accent Ring */}
-          {project.featured && (
-            <mesh rotation={[Math.PI / 4, 0, 0]}>
-              <torusGeometry args={[2.0, 0.02, 16, 64]} />
-              <meshBasicMaterial
-                color={project.node_color_primary || '#f59e0b'}
-                transparent
-                opacity={hovered || isSelected ? 0.9 : 0.6}
-              />
-            </mesh>
-          )}
-
-          {/* Focal Light (Culled to 0 intensity when distant to eliminate forward-rendering light loops) */}
-          <pointLight
-            color={project.node_color_primary}
-            intensity={
-              hovered || isSelected
-                ? 3.4
-                : currentState !== 'idle'
-                  ? (project.featured ? 2.2 : 1.4)
-                  : 0
-            }
-            distance={8}
-            decay={2}
-          />
-
-          {/* 4. Crisp In-World 3D Monospace Header */}
-          <group ref={textGroupRef} position={[0, 2.1, 0]}>
+          {/* 7. Milestone Label Signage */}
+          <group position={[0, 1.8, 0]}>
             <Text
-              position={[0, 0.52, 0]}
-              fontSize={0.18}
-              color={project.featured ? '#f59e0b' : project.node_color_primary}
+              position={[0, 0.35, 0]}
+              fontSize={0.13}
+              color={project.node_color_primary || '#38bdf8'}
               anchorX="center"
               anchorY="middle"
               font={JETBRAINS_MONO_FONT}
             >
-              {`SPEC // ${indexStr} // ${project.featured ? '★ FEATURED // ' : ''}${project.year || '2026'} // ${project.category.replace('_', ' ').toUpperCase()}`}
+              {`[ MILESTONE // ${indexStr} ]`}
             </Text>
-
             <Text
-              position={[0, 0.16, 0]}
-              fontSize={0.32}
+              position={[0, 0.05, 0]}
+              fontSize={0.28}
               color="#f8fafc"
               anchorX="center"
               anchorY="middle"
-              maxWidth={5.5}
+              maxWidth={5.0}
               textAlign="center"
             >
               {project.title.toUpperCase()}
             </Text>
           </group>
 
-          {/* 5. In-World Holographic Project Preview Display (Revealed when Focused) */}
+          {/* 8. Holographic Project Preview Display (Revealed when Focused) */}
           <group ref={previewGroupRef} position={[0, -0.4, 1.8]}>
-            {/* Viewfinder Backing Screen */}
+            {/* Viewfinder Screen */}
             <mesh position={[0, 0, -0.02]}>
               <planeGeometry args={[3.2, 1.8]} />
               <meshStandardMaterial
-                color="#030306"
+                color="#04060b"
                 roughness={0.2}
                 metalness={0.9}
                 transparent
-                opacity={0.88}
+                opacity={0.9}
               />
             </mesh>
 
-            {/* Hairline Outer Frame */}
+            {/* Viewfinder Outer Frame */}
             <mesh position={[0, 0, -0.01]}>
               <planeGeometry args={[3.25, 1.85]} />
               <meshBasicMaterial
@@ -333,18 +379,20 @@ export const ProjectNode: React.FC<ProjectNodeProps> = ({
               />
             </mesh>
 
-            {/* High-Resolution Thumbnail Viewport (Lazy-Loaded upon Proximity) */}
+            {/* Thumbnail Viewport (Protected with Error Boundary) */}
             {(hasBeenApproached || currentState !== 'idle') && project.thumbnail_url && (
-              <Image
-                url={project.thumbnail_url}
-                scale={[3.0, 1.6]}
-                position={[0, 0, 0.02]}
-                transparent
-                opacity={0.85}
-              />
+              <ThumbnailErrorBoundary>
+                <Image
+                  url={project.thumbnail_url}
+                  scale={[3.0, 1.6]}
+                  position={[0, 0, 0.02]}
+                  transparent
+                  opacity={0.88}
+                />
+              </ThumbnailErrorBoundary>
             )}
 
-            {/* Floating Telemetry Header Bar on Viewport */}
+            {/* Telemetry Header */}
             <Text
               position={[0, 1.05, 0.05]}
               fontSize={0.13}
@@ -358,7 +406,7 @@ export const ProjectNode: React.FC<ProjectNodeProps> = ({
                 : `[ DOSSIER PREVIEW // ${project.category.toUpperCase()} ]`}
             </Text>
 
-            {/* Interactive Engagement Button Prompt */}
+            {/* Interactive Engagement Button */}
             <group
               position={[0, -1.05, 0.05]}
               onClick={(e) => {
@@ -376,8 +424,8 @@ export const ProjectNode: React.FC<ProjectNodeProps> = ({
               }}
             >
               <mesh>
-                <planeGeometry args={[2.4, 0.32]} />
-                <meshBasicMaterial color="#0b0b14" />
+                <planeGeometry args={[2.5, 0.34]} />
+                <meshBasicMaterial color="#090d16" />
               </mesh>
               <Text
                 position={[0, 0, 0.02]}

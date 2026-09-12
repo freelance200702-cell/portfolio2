@@ -61,7 +61,7 @@ export const CanvasContainer: React.FC<CanvasContainerProps> = ({ className }) =
             });
           }}
         >
-          <color attach="background" args={['#030305']} />
+          <color attach="background" args={['#06080e']} />
 
           <Suspense fallback={null}>
             <Scene />
