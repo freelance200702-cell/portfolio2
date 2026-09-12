@@ -655,9 +655,12 @@ export const MediaManagerModal: React.FC<MediaManagerModalProps> = ({
                   }}
                   className="w-full px-3 py-2 rounded-sm bg-black/60 border border-white/10 text-white font-mono text-xs focus:outline-none focus:border-primary"
                 >
-                  <option value="hologram_pedestal">Hologram Pedestal (Procedural Diamond)</option>
-                  <option value="cyber_terminal">Cyber Terminal (Procedural Monolith)</option>
-                  <option value="data_monolith">Data Monolith (Procedural Obelisk)</option>
+                  <option value="architectural_structure">Architectural Structure (Pavilion / Terrace)</option>
+                  <option value="miniature_environment">Miniature Environment (Contour Diorama)</option>
+                  <option value="technical_installation">Technical Installation (Optics / Sensor Array)</option>
+                  <option value="vehicle_object">Vehicle / Object (Exploration Probe in Cradle)</option>
+                  <option value="data_monument">Data Monument (Obsidian Compute Pylon)</option>
+                  <option value="studio_workspace">Studio / Workspace (Drafting Workstation)</option>
                   <option value="custom_glb">Custom GLB Model (Requires .glb URL)</option>
                 </select>
               </div>

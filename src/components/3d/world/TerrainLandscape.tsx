@@ -70,18 +70,18 @@ export const TerrainLandscape: React.FC<TerrainLandscapeProps> = ({ curve }) => 
   return (
     <group>
       {/* 1. Expansive Foundational Bedrock Floor (Ground Plane at y = -0.6) */}
-      <mesh position={[0, -0.6, -240]} receiveShadow>
-        <planeGeometry args={[500, 700]} />
+      <mesh position={[0, -0.6, -240]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <planeGeometry args={[600, 800]} />
         <meshStandardMaterial
-          color="#06080e"
-          roughness={0.4}
-          metalness={0.8}
+          color="#060810"
+          roughness={0.5}
+          metalness={0.82}
         />
       </mesh>
 
       {/* 2. Subterranean Geometric Perspective Grid Lines */}
       <gridHelper
-        args={[600, 60, '#1e293b', '#0f172a']}
+        args={[600, 60, '#1e293b', '#0d131f']}
         position={[0, -0.58, -240]}
       />
 
@@ -118,12 +118,22 @@ export const TerrainLandscape: React.FC<TerrainLandscapeProps> = ({ curve }) => 
       {/* 5. Glowing Sub-Terrace Horizon Accents (Subtle hairline edge luminescence) */}
       <mesh position={[-28, -0.52, -220]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[0.08, 650]} />
-        <meshBasicMaterial color="#38bdf8" transparent opacity={0.35} />
+        <meshBasicMaterial color="#38bdf8" transparent opacity={0.4} />
       </mesh>
 
       <mesh position={[28, -0.52, -220]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[0.08, 650]} />
-        <meshBasicMaterial color="#64748b" transparent opacity={0.35} />
+        <meshBasicMaterial color="#64748b" transparent opacity={0.4} />
+      </mesh>
+
+      {/* 6. Valley Floor Energy Trenches & Foundation Conduits */}
+      <mesh position={[-16, -0.53, -220]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[0.15, 600]} />
+        <meshBasicMaterial color="#0284c7" transparent opacity={0.25} />
+      </mesh>
+      <mesh position={[16, -0.53, -220]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[0.15, 600]} />
+        <meshBasicMaterial color="#0284c7" transparent opacity={0.25} />
       </mesh>
     </group>
   );

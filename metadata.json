@@ -1,0 +1,8 @@
+{
+  "name": "Developer Journey — 3D Systems & Simulation Portfolio",
+  "description": "Interactive 3D spatial developer journey exploring real-time simulation engines, distributed AI architecture, graphics systems, and low-latency concurrent engineering.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

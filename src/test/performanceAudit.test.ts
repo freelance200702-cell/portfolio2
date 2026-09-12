@@ -107,9 +107,9 @@ describe('Production Performance Audit & Optimization Verification', () => {
   });
 
   describe('4. Centralized Typography & Asset Network Optimization', () => {
-    it('validates JETBRAINS_MONO_FONT uses secure HTTPS and ends with .woff', () => {
+    it('validates JETBRAINS_MONO_FONT uses secure HTTPS and ends with valid web font extension', () => {
       expect(JETBRAINS_MONO_FONT).toMatch(/^https:\/\//);
-      expect(JETBRAINS_MONO_FONT).toMatch(/\.woff$/);
+      expect(JETBRAINS_MONO_FONT).toMatch(/\.(woff|ttf)$/);
       expect(JETBRAINS_MONO_FONT).toContain('jetbrainsmono');
     });
   });

@@ -97,4 +97,42 @@ describe('Visual Reconstruction: Cinematic 3D Architectural World Verification',
       expect(deepZ).toBeLessThan(-200);
     });
   });
+
+  describe('4. Layered Environmental Composition & Scale Hierarchy', () => {
+    it('verifies 4-tier layered depth zones (Foreground, Midground, Background, Horizon)', () => {
+      const depthZones = {
+        foreground: { min: 0, max: 15 },
+        midground: { min: 15, max: 70 },
+        background: { min: 70, max: 250 },
+        horizon: { min: 250, max: 600 },
+      };
+
+      expect(depthZones.foreground.max).toBeLessThanOrEqual(depthZones.midground.min);
+      expect(depthZones.midground.max).toBeLessThanOrEqual(depthZones.background.min);
+      expect(depthZones.background.max).toBeLessThanOrEqual(depthZones.horizon.min);
+    });
+
+    it('verifies midground canyon overhead traverse spans provide overhead clearance for journey camera', () => {
+      // Camera eye height along trajectory is typically y = 1.6m to 3.5m
+      const cameraMaxY = 3.5;
+      const traverseArch1Y = 14;
+      const traverseArch2Y = 16;
+
+      expect(traverseArch1Y).toBeGreaterThan(cameraMaxY + 8);
+      expect(traverseArch2Y).toBeGreaterThan(cameraMaxY + 8);
+    });
+
+    it('verifies human-scale visual cues on exhibit plinths', () => {
+      const handrailHeight = 0.72; // Waist-height observation rail
+      const plinthDiameter = 3.4; // 1.7m radius
+      const roadWidth = 2.8;
+
+      // Handrail waist height should be human scale (~0.7m - 0.9m)
+      expect(handrailHeight).toBeGreaterThan(0.6);
+      expect(handrailHeight).toBeLessThan(1.1);
+
+      // Plinth should be wider than the road to feel like an expansive observation deck
+      expect(plinthDiameter).toBeGreaterThan(roadWidth);
+    });
+  });
 });

@@ -6,6 +6,12 @@ export type ProjectCategory =
   | 'web_fullstack';
 
 export type NodeStyleType =
+  | 'architectural_structure'
+  | 'miniature_environment'
+  | 'technical_installation'
+  | 'vehicle_object'
+  | 'data_monument'
+  | 'studio_workspace'
   | 'hologram_pedestal'
   | 'cyber_terminal'
   | 'data_monolith'

@@ -22,10 +22,13 @@ const CATEGORIES: { id: ProjectCategory; label: string }[] = [
 ];
 
 const NODE_STYLES: { id: NodeStyleType; label: string }[] = [
-  { id: 'hologram_pedestal', label: 'Hologram Pedestal' },
-  { id: 'cyber_terminal', label: 'Cyber Terminal' },
-  { id: 'data_monolith', label: 'Data Monolith' },
-  { id: 'custom_glb', label: 'Custom 3D GLB Model' },
+  { id: 'architectural_structure', label: 'Architectural Structure (Pavilion / Terrace)' },
+  { id: 'miniature_environment', label: 'Miniature Environment (Contour Diorama)' },
+  { id: 'technical_installation', label: 'Technical Installation (Optics / Sensor Array)' },
+  { id: 'vehicle_object', label: 'Vehicle / Object (Exploration Probe in Cradle)' },
+  { id: 'data_monument', label: 'Data Monument (Obsidian Compute Pylon)' },
+  { id: 'studio_workspace', label: 'Studio / Workspace (Drafting Workstation)' },
+  { id: 'custom_glb', label: 'Custom 3D GLB Model (Requires .glb URL)' },
 ];
 
 function slugify(text: string): string {

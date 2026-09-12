@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { useJourneyStore } from '@/stores/useJourneyStore';
 import { generateSplineCurve, calculateProjectPlacements } from '@/lib/splineMath';
 import { SplineRoad } from './SplineRoad';
-import { ProjectNode } from './ProjectNode';
+import { ProjectLandmark } from './landmarks/ProjectLandmark';
 import { AtmosphericSky } from './world/AtmosphericSky';
 import { AtmosphericLighting } from './world/AtmosphericLighting';
 import { TerrainLandscape } from './world/TerrainLandscape';
@@ -42,9 +42,9 @@ export const Scene: React.FC = () => {
       {/* 6. Multi-layered Illuminated Viaduct Highway */}
       <SplineRoad projects={projects} />
 
-      {/* 7. Proximity-Awakened Architectural Project Exhibit Pavilions */}
+      {/* 7. Proximity-Awakened Architectural Project Exhibit Landmarks */}
       {projectPlacements.map(({ project, position, tangent, index, t, rotationY }) => (
-        <ProjectNode
+        <ProjectLandmark
           key={project.id}
           project={project}
           position={position}

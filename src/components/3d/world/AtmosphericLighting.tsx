@@ -54,27 +54,31 @@ export const AtmosphericLighting: React.FC = () => {
       <fogExp2 attach="fog" args={['#090d16', 0.0048]} />
 
       {/* 2. Balanced Ambient Atmosphere (cool slate fill so shadows retain architectural form) */}
-      <ambientLight intensity={0.5} color="#111827" />
+      <ambientLight intensity={0.55} color="#0e1628" />
 
-      {/* 3. Primary Key Directional Sun (low-angle grazing light casting dramatic long highlights) */}
+      {/* 3. Primary Key Directional Sun (low-angle grazing light casting dramatic highlights) */}
       <directionalLight
-        position={[35, 32, 25]}
-        intensity={2.4}
-        color="#f1f5f9"
+        position={[40, 36, 25]}
+        intensity={2.5}
+        color="#f8fafc"
+        castShadow={qualityPreset === 'cinematic'}
+        shadow-mapSize-width={1024}
+        shadow-mapSize-height={1024}
+        shadow-bias={-0.0002}
       />
 
-      {/* 4. Secondary Counter-Rim Light (deep atmospheric backfill) */}
+      {/* 4. Secondary Counter-Rim Light (deep atmospheric cyan edge fill) */}
       <directionalLight
-        position={[-40, 14, -150]}
-        intensity={0.9}
-        color="#475569"
+        position={[-45, 16, -140]}
+        intensity={0.8}
+        color="#38bdf8"
       />
 
       {/* 5. Horizon Guiding Beacon at the expedition vanishing point */}
       <pointLight
-        position={[0, 6, -320]}
-        intensity={2.2}
-        distance={240}
+        position={[0, 8, -340]}
+        intensity={2.4}
+        distance={320}
         decay={1.8}
         color="#93c5fd"
       />

@@ -1,4 +1,5 @@
 import React, { useMemo, useRef, useEffect } from 'react';
+import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useUIStore } from '@/stores/useUIStore';
 
@@ -10,8 +11,14 @@ export const DistantScenery: React.FC<DistantSceneryProps> = ({ curve }) => {
   const qualityPreset = useUIStore((s) => s.qualityPreset);
 
   const monolithCount = qualityPreset === 'mobile' ? 12 : 24;
+  const towerCount = qualityPreset === 'mobile' ? 8 : 14;
+
   const monolithRef = useRef<THREE.InstancedMesh>(null);
   const beaconRef = useRef<THREE.InstancedMesh>(null);
+  const towerRef = useRef<THREE.InstancedMesh>(null);
+  const towerBeaconRef = useRef<THREE.InstancedMesh>(null);
+  const beaconMatRef = useRef<THREE.MeshBasicMaterial>(null);
+  const towerBeaconMatRef = useRef<THREE.MeshBasicMaterial>(null);
 
   // Distribute monoliths along the outer canyon ridges, scaling depth to track terminus
   const monolithData = useMemo(() => {
@@ -51,6 +58,27 @@ export const DistantScenery: React.FC<DistantSceneryProps> = ({ curve }) => {
     return seedPoints.slice(0, monolithCount);
   }, [monolithCount, curve]);
 
+  // Midground Transmission Relays positioned on the canyon rim benches (establishing human/industrial scale)
+  const towerData = useMemo(() => {
+    const towers = [
+      { x: -42, z: -20, h: 22 },
+      { x: 44, z: -35, h: 24 },
+      { x: -46, z: -85, h: 26 },
+      { x: 48, z: -105, h: 25 },
+      { x: -50, z: -160, h: 28 },
+      { x: 52, z: -180, h: 26 },
+      { x: -48, z: -230, h: 29 },
+      { x: 50, z: -255, h: 27 },
+      { x: -54, z: -300, h: 32 },
+      { x: 56, z: -320, h: 30 },
+      { x: -38, z: 25, h: 18 },
+      { x: 40, z: 15, h: 20 },
+      { x: -62, z: -345, h: 35 },
+      { x: 64, z: -350, h: 35 },
+    ];
+    return towers.slice(0, towerCount);
+  }, [towerCount]);
+
   useEffect(() => {
     const dummy = new THREE.Object3D();
 
@@ -67,7 +95,6 @@ export const DistantScenery: React.FC<DistantSceneryProps> = ({ curve }) => {
 
     if (beaconRef.current) {
       monolithData.forEach((m, idx) => {
-        // Vertical light shafts sitting atop the tallest monoliths
         dummy.position.set(m.x, m.h + 12 - 0.6, m.z);
         dummy.scale.set(0.15, 24, 0.15);
         dummy.rotation.set(0, 0, 0);
@@ -76,7 +103,42 @@ export const DistantScenery: React.FC<DistantSceneryProps> = ({ curve }) => {
       });
       beaconRef.current.instanceMatrix.needsUpdate = true;
     }
-  }, [monolithData]);
+
+    if (towerRef.current) {
+      towerData.forEach((t, idx) => {
+        dummy.position.set(t.x, t.h * 0.5 - 0.6, t.z);
+        dummy.scale.set(0.7, t.h, 0.7);
+        dummy.rotation.set(0, (idx * 0.4), 0);
+        dummy.updateMatrix();
+        towerRef.current!.setMatrixAt(idx, dummy.matrix);
+      });
+      towerRef.current.instanceMatrix.needsUpdate = true;
+    }
+
+    if (towerBeaconRef.current) {
+      towerData.forEach((t, idx) => {
+        dummy.position.set(t.x, t.h - 0.5, t.z);
+        dummy.scale.set(0.35, 0.35, 0.35);
+        dummy.rotation.set(0, 0, 0);
+        dummy.updateMatrix();
+        towerBeaconRef.current!.setMatrixAt(idx, dummy.matrix);
+      });
+      towerBeaconRef.current.instanceMatrix.needsUpdate = true;
+    }
+  }, [monolithData, towerData]);
+
+  // Subtle rhythmic harmonic beacon pulses (slow, industrial, breathing movement)
+  useFrame(({ clock }) => {
+    const time = clock.getElapsedTime();
+    if (beaconMatRef.current) {
+      beaconMatRef.current.opacity = 0.15 + Math.sin(time * 1.2) * 0.05;
+    }
+    if (towerBeaconMatRef.current) {
+      // Synchronized aviation/telemetry pulse with sharp strobe peak
+      const pulse = Math.pow(Math.sin(time * 2.2), 6.0);
+      towerBeaconMatRef.current.opacity = 0.2 + pulse * 0.7;
+    }
+  });
 
   return (
     <group>
@@ -102,6 +164,7 @@ export const DistantScenery: React.FC<DistantSceneryProps> = ({ curve }) => {
       >
         <cylinderGeometry args={[1, 1, 1, 8]} />
         <meshBasicMaterial
+          ref={beaconMatRef}
           color="#38bdf8"
           transparent
           opacity={0.18}
@@ -109,6 +172,83 @@ export const DistantScenery: React.FC<DistantSceneryProps> = ({ curve }) => {
           depthWrite={false}
         />
       </instancedMesh>
+
+      {/* 3. Midground Transmission Relay Towers (Scale-Anchoring Infrastructure) */}
+      <instancedMesh
+        ref={towerRef}
+        args={[undefined, undefined, towerData.length]}
+        castShadow
+      >
+        <cylinderGeometry args={[0.3, 1.2, 1, 6]} />
+        <meshStandardMaterial
+          color="#111726"
+          roughness={0.5}
+          metalness={0.8}
+        />
+      </instancedMesh>
+
+      {/* 4. Pulsing Red/Cyan Aviation Strobes atop Transmission Relays */}
+      <instancedMesh
+        ref={towerBeaconRef}
+        args={[undefined, undefined, towerData.length]}
+      >
+        <sphereGeometry args={[1, 8, 8]} />
+        <meshBasicMaterial
+          ref={towerBeaconMatRef}
+          color="#f43f5e"
+          transparent
+          opacity={0.7}
+        />
+      </instancedMesh>
+
+      {/* 5. Canyon Overhead Infrastructure Traverse Spans (Framing midground depth) */}
+      {/* Arch 1: At z = -90 (Between early and middle journey) */}
+      <group position={[0, 14, -90]}>
+        {/* Horizontal Truss Span */}
+        <mesh position={[0, 0, 0]} castShadow>
+          <boxGeometry args={[75, 1.2, 2.4]} />
+          <meshStandardMaterial color="#090d16" roughness={0.35} metalness={0.9} />
+        </mesh>
+        {/* Underside Telemetry Luminaire */}
+        <mesh position={[0, -0.65, 0]}>
+          <boxGeometry args={[45, 0.05, 0.4]} />
+          <meshBasicMaterial color="#38bdf8" transparent opacity={0.65} />
+        </mesh>
+        {/* Left Canyon Anchor Column */}
+        <mesh position={[-36, -7, 0]} castShadow>
+          <boxGeometry args={[2.0, 14, 2.4]} />
+          <meshStandardMaterial color="#070a12" roughness={0.4} metalness={0.85} />
+        </mesh>
+        {/* Right Canyon Anchor Column */}
+        <mesh position={[36, -7, 0]} castShadow>
+          <boxGeometry args={[2.0, 14, 2.4]} />
+          <meshStandardMaterial color="#070a12" roughness={0.4} metalness={0.85} />
+        </mesh>
+      </group>
+
+      {/* Arch 2: At z = -225 (Before Systems Observatory) */}
+      <group position={[0, 16, -225]}>
+        {/* Horizontal Truss Span */}
+        <mesh position={[0, 0, 0]} castShadow>
+          <boxGeometry args={[85, 1.4, 2.8]} />
+          <meshStandardMaterial color="#090d16" roughness={0.35} metalness={0.9} />
+        </mesh>
+        {/* Underside Telemetry Luminaire */}
+        <mesh position={[0, -0.75, 0]}>
+          <boxGeometry args={[55, 0.05, 0.4]} />
+          <meshBasicMaterial color="#94a3b8" transparent opacity={0.65} />
+        </mesh>
+        {/* Left Canyon Anchor Column */}
+        <mesh position={[-41, -8, 0]} castShadow>
+          <boxGeometry args={[2.4, 16, 2.8]} />
+          <meshStandardMaterial color="#070a12" roughness={0.4} metalness={0.85} />
+        </mesh>
+        {/* Right Canyon Anchor Column */}
+        <mesh position={[41, -8, 0]} castShadow>
+          <boxGeometry args={[2.4, 16, 2.8]} />
+          <meshStandardMaterial color="#070a12" roughness={0.4} metalness={0.85} />
+        </mesh>
+      </group>
     </group>
   );
 };
