@@ -52,15 +52,15 @@ export const DataMonument: React.FC<BaseLandmarkProps> = ({
 
   return (
     <group position={[0, 0, 0]}>
-      {/* 1. Heavy Stepped Basalt Monolith Foundation */}
+      {/* 1. Heavy Stepped Basalt Monolith Foundation (Warm Limestone & Travertine) */}
       <mesh position={[0, 0.15, 0]} receiveShadow castShadow>
         <boxGeometry args={[3.2, 0.3, 3.2]} />
-        <meshStandardMaterial color="#080c14" roughness={0.6} metalness={0.7} />
+        <meshStandardMaterial color="#8c8479" roughness={0.7} metalness={0.04} />
       </mesh>
 
       <mesh position={[0, 0.38, 0]} receiveShadow>
         <boxGeometry args={[2.4, 0.16, 2.4]} />
-        <meshStandardMaterial color="#0e1320" roughness={0.5} metalness={0.8} />
+        <meshStandardMaterial color="#ded8ce" roughness={0.6} metalness={0.04} />
       </mesh>
 
       {/* Recessed Floor Conduit Ring */}
@@ -74,13 +74,13 @@ export const DataMonument: React.FC<BaseLandmarkProps> = ({
         />
       </mesh>
 
-      {/* 2. Monumental Obsidian Compute Pillar (4.2m tall) */}
+      {/* 2. Monumental Charcoal Basalt Compute Pillar (4.2m tall) */}
       <mesh ref={pylonRef} position={[0, 2.4, 0]} castShadow receiveShadow>
         <boxGeometry args={[1.2, 4.0, 1.2]} />
         <meshStandardMaterial
-          color="#060910"
-          roughness={0.15}
-          metalness={0.92}
+          color="#262320"
+          roughness={0.45}
+          metalness={0.15}
         />
       </mesh>
 

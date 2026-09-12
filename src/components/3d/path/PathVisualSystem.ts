@@ -29,18 +29,18 @@ export function createDeckDiffuseCanvas(width = 1024, height = 1024): HTMLCanvas
   const ctx = canvas.getContext('2d');
   if (!ctx) return canvas;
 
-  // Base roadway tone: Industrial dark graphite / deep basalt
-  ctx.fillStyle = '#10141d';
+  // Base roadway tone: Refined warm architectural stone / ivory travertine
+  ctx.fillStyle = '#dbd6cc';
   ctx.fillRect(0, 0, width, height);
 
   // Micro-aggregate noise texture
   const imgData = ctx.getImageData(0, 0, width, height);
   const data = imgData.data;
   for (let i = 0; i < data.length; i += 4) {
-    const noise = (Math.random() - 0.5) * 14;
+    const noise = (Math.random() - 0.5) * 12;
     data[i] = Math.min(255, Math.max(0, data[i] + noise));
-    data[i + 1] = Math.min(255, Math.max(0, data[i + 1] + noise));
-    data[i + 2] = Math.min(255, Math.max(0, data[i + 2] + noise + 2)); // Subtle cool blue shift
+    data[i + 1] = Math.min(255, Math.max(0, data[i + 1] + noise - 1));
+    data[i + 2] = Math.min(255, Math.max(0, data[i + 2] + noise - 3)); // Subtle warm golden shift
   }
   ctx.putImageData(imgData, 0, 0);
 
@@ -51,40 +51,40 @@ export function createDeckDiffuseCanvas(width = 1024, height = 1024): HTMLCanvas
   for (let s = 0; s < slabCount; s++) {
     const y = s * slabHeight;
 
-    // Dark recessed expansion seam
-    ctx.strokeStyle = '#06080d';
-    ctx.lineWidth = 4;
+    // Recessed architectural expansion seam (warm stone shadow)
+    ctx.strokeStyle = '#8c8479';
+    ctx.lineWidth = 3;
     ctx.beginPath();
     ctx.moveTo(0, y);
     ctx.lineTo(width, y);
     ctx.stroke();
 
-    // Subtle edge highlight adjacent to expansion joint (beveled slab edge catching light)
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.07)';
+    // Subtle beveled edge highlight
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(0, y + 3);
-    ctx.lineTo(width, y + 3);
+    ctx.moveTo(0, y + 2);
+    ctx.lineTo(width, y + 2);
     ctx.stroke();
   }
 
-  // Dual subtle tire track lanes (wear from navigation)
+  // Dual subtle tire track lanes (gentle burnished stone wear)
   const gradLeft = ctx.createLinearGradient(width * 0.15, 0, width * 0.38, 0);
-  gradLeft.addColorStop(0, 'rgba(10, 14, 20, 0)');
-  gradLeft.addColorStop(0.5, 'rgba(7, 9, 14, 0.45)');
-  gradLeft.addColorStop(1, 'rgba(10, 14, 20, 0)');
+  gradLeft.addColorStop(0, 'rgba(120, 110, 100, 0)');
+  gradLeft.addColorStop(0.5, 'rgba(100, 92, 84, 0.14)');
+  gradLeft.addColorStop(1, 'rgba(120, 110, 100, 0)');
   ctx.fillStyle = gradLeft;
   ctx.fillRect(width * 0.15, 0, width * 0.23, height);
 
   const gradRight = ctx.createLinearGradient(width * 0.62, 0, width * 0.85, 0);
-  gradRight.addColorStop(0, 'rgba(10, 14, 20, 0)');
-  gradRight.addColorStop(0.5, 'rgba(7, 9, 14, 0.45)');
-  gradRight.addColorStop(1, 'rgba(10, 14, 20, 0)');
+  gradRight.addColorStop(0, 'rgba(120, 110, 100, 0)');
+  gradRight.addColorStop(0.5, 'rgba(100, 92, 84, 0.14)');
+  gradRight.addColorStop(1, 'rgba(120, 110, 100, 0)');
   ctx.fillStyle = gradRight;
   ctx.fillRect(width * 0.62, 0, width * 0.23, height);
 
-  // Outer safety tactile rumble strip bands (along left and right edges)
-  ctx.fillStyle = 'rgba(30, 41, 59, 0.6)';
+  // Outer safety tactile rumble strip bands (restrained warm charcoal / stone accent)
+  ctx.fillStyle = 'rgba(75, 68, 62, 0.25)';
   ctx.fillRect(0, 0, width * 0.05, height);
   ctx.fillRect(width * 0.95, 0, width * 0.05, height);
 

@@ -55,10 +55,10 @@ export const VehicleObject: React.FC<BaseLandmarkProps> = ({
 
   return (
     <group position={[0, 0, 0]}>
-      {/* 1. Ground Maintenance & Servicing Cradle Platform */}
+      {/* 1. Ground Maintenance & Servicing Cradle Platform (Warm Architectural Stone) */}
       <mesh position={[0, 0.15, 0]} receiveShadow castShadow>
         <boxGeometry args={[3.6, 0.3, 2.6]} />
-        <meshStandardMaterial color="#0e131d" roughness={0.6} metalness={0.6} />
+        <meshStandardMaterial color="#8c8479" roughness={0.7} metalness={0.04} />
       </mesh>
 
       {/* Safety Hazard Perimeter Marking Edge */}
@@ -76,28 +76,28 @@ export const VehicleObject: React.FC<BaseLandmarkProps> = ({
         {/* Forward Cradle Rest */}
         <mesh position={[0, 0.4, 0.8]} castShadow>
           <boxGeometry args={[0.8, 0.8, 0.15]} />
-          <meshStandardMaterial color="#1e293b" roughness={0.3} metalness={0.9} />
+          <meshStandardMaterial color="#3b3734" roughness={0.4} metalness={0.6} />
         </mesh>
         {/* Rear Twin Cradle Struts */}
         <mesh position={[-0.9, 0.45, -0.6]} rotation={[0, 0, -0.2]} castShadow>
           <cylinderGeometry args={[0.06, 0.08, 0.9, 8]} />
-          <meshStandardMaterial color="#334155" roughness={0.3} metalness={0.9} />
+          <meshStandardMaterial color="#3b3734" roughness={0.4} metalness={0.6} />
         </mesh>
         <mesh position={[0.9, 0.45, -0.6]} rotation={[0, 0, 0.2]} castShadow>
           <cylinderGeometry args={[0.06, 0.08, 0.9, 8]} />
-          <meshStandardMaterial color="#334155" roughness={0.3} metalness={0.9} />
+          <meshStandardMaterial color="#3b3734" roughness={0.4} metalness={0.6} />
         </mesh>
       </group>
 
-      {/* 3. The Autonomous Vehicle / Probe Craft */}
+      {/* 3. The Autonomous Vehicle / Probe Craft (Warm Aerospace Ceramic Ivory) */}
       <group ref={craftRef} position={[0, 1.35, 0]}>
         {/* Main Aerodynamic Fuselage Pod */}
         <mesh position={[0, 0, 0]} rotation={[0, 0, 0]} castShadow>
           <coneGeometry args={[0.65, 2.8, 6]} />
           <meshStandardMaterial
-            color="#111827"
-            roughness={0.2}
-            metalness={0.88}
+            color="#eae5dc"
+            roughness={0.35}
+            metalness={0.2}
           />
         </mesh>
 
@@ -105,9 +105,9 @@ export const VehicleObject: React.FC<BaseLandmarkProps> = ({
         <mesh position={[0, 1.45, 0]}>
           <coneGeometry args={[0.2, 0.4, 12]} />
           <meshStandardMaterial
-            color="#030712"
-            roughness={0.1}
-            metalness={0.95}
+            color="#262320"
+            roughness={0.2}
+            metalness={0.5}
           />
         </mesh>
 

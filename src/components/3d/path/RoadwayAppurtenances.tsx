@@ -156,7 +156,7 @@ export const RoadwayAppurtenances: React.FC<RoadwayAppurtenancesProps> = ({
 
   return (
     <group>
-      {/* 1. Heavy Reinforced Concrete Viaduct Piers (Instanced: 1 Draw Call) */}
+      {/* 1. Heavy Reinforced Concrete Viaduct Piers (Warm Architectural Concrete) */}
       {pierData.length > 0 && (
         <instancedMesh
           ref={pierRef}
@@ -166,14 +166,14 @@ export const RoadwayAppurtenances: React.FC<RoadwayAppurtenancesProps> = ({
         >
           <boxGeometry args={[1, 1, 1]} />
           <meshStandardMaterial
-            color="#1c2738"
-            roughness={0.75}
-            metalness={0.18}
+            color="#6b645b"
+            roughness={0.8}
+            metalness={0.04}
           />
         </instancedMesh>
       )}
 
-      {/* 2. Matte Roadway Centerline Dashes (Non-emissive physical traffic paint) */}
+      {/* 2. Matte Roadway Centerline Dashes (Clean Warm White Road Markings) */}
       {centerDashes.length > 0 && (
         <instancedMesh
           ref={dashRef}
@@ -181,9 +181,9 @@ export const RoadwayAppurtenances: React.FC<RoadwayAppurtenancesProps> = ({
         >
           <boxGeometry args={[1, 1, 1]} />
           <meshStandardMaterial
-            color="#94a3b8"
-            roughness={0.8}
-            metalness={0.1}
+            color="#fdfcfb"
+            roughness={0.7}
+            metalness={0.02}
           />
         </instancedMesh>
       )}

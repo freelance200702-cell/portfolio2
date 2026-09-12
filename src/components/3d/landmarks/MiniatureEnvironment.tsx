@@ -51,38 +51,38 @@ export const MiniatureEnvironment: React.FC<BaseLandmarkProps> = ({
 
   return (
     <group position={[0, 0, 0]}>
-      {/* 1. Heavy Containment Basin (Exterior retaining wall) */}
+      {/* 1. Heavy Containment Basin (Exterior retaining wall in warm architectural stone) */}
       <mesh position={[0, 0.2, 0]} receiveShadow castShadow>
         <cylinderGeometry args={[2.2, 2.4, 0.4, 24]} />
-        <meshStandardMaterial color="#0b0f19" roughness={0.6} metalness={0.5} />
+        <meshStandardMaterial color="#8c8479" roughness={0.7} metalness={0.04} />
       </mesh>
 
-      {/* 2. Stepped Topographic Contour Layers */}
+      {/* 2. Stepped Topographic Contour Layers (Warm Architectural Stone Strata) */}
       {/* Tier 1: Lowland Plateau */}
       <mesh position={[0.2, 0.38, -0.1]} receiveShadow>
         <cylinderGeometry args={[1.9, 2.05, 0.16, 16]} />
-        <meshStandardMaterial color="#121824" roughness={0.7} metalness={0.3} />
+        <meshStandardMaterial color="#cfc7b9" roughness={0.75} metalness={0.03} />
       </mesh>
 
       {/* Tier 2: Mid-Elevation Ridge */}
       <mesh position={[-0.25, 0.55, -0.2]} receiveShadow>
         <cylinderGeometry args={[1.4, 1.6, 0.2, 12]} />
-        <meshStandardMaterial color="#172030" roughness={0.65} metalness={0.4} />
+        <meshStandardMaterial color="#b8b0a2" roughness={0.75} metalness={0.03} />
       </mesh>
 
       {/* Tier 3: High Peak Terrace */}
       <mesh position={[-0.45, 0.76, -0.35]} receiveShadow>
         <cylinderGeometry args={[0.85, 1.05, 0.22, 10]} />
-        <meshStandardMaterial color="#1c2638" roughness={0.6} metalness={0.5} />
+        <meshStandardMaterial color="#9e9587" roughness={0.75} metalness={0.03} />
       </mesh>
 
       {/* 3. Dark Mirror Reflecting Basin (Shallow pool) */}
       <mesh ref={waterRef} position={[0.55, 0.48, 0.35]} rotation={[-Math.PI / 2, 0, 0]}>
         <circleGeometry args={[0.75, 24]} />
         <meshStandardMaterial
-          color="#04060a"
-          roughness={0.06}
-          metalness={0.96}
+          color="#1e242b"
+          roughness={0.08}
+          metalness={0.8}
         />
       </mesh>
 
@@ -98,11 +98,11 @@ export const MiniatureEnvironment: React.FC<BaseLandmarkProps> = ({
         <mesh position={[0, 0.65, 0]} castShadow>
           <coneGeometry args={[0.3, 1.3, 6]} />
           <meshStandardMaterial
-            color="#080c14"
+            color="#262320"
             emissive={primaryColor}
             emissiveIntensity={state === 'idle' ? 0.3 : 1.1}
             roughness={0.12}
-            metalness={0.85}
+            metalness={0.5}
           />
         </mesh>
 
@@ -110,21 +110,21 @@ export const MiniatureEnvironment: React.FC<BaseLandmarkProps> = ({
         <mesh position={[0.22, 0.35, 0.12]} rotation={[0.15, 0.4, -0.2]} castShadow>
           <coneGeometry args={[0.18, 0.8, 5]} />
           <meshStandardMaterial
-            color="#0d1424"
+            color="#2e2a26"
             emissive={secondaryColor}
             emissiveIntensity={0.5}
             roughness={0.2}
-            metalness={0.9}
+            metalness={0.6}
           />
         </mesh>
         <mesh position={[-0.18, 0.4, 0.15]} rotation={[-0.2, -0.3, 0.25]} castShadow>
           <coneGeometry args={[0.16, 0.75, 5]} />
           <meshStandardMaterial
-            color="#0d1424"
+            color="#2e2a26"
             emissive={primaryColor}
             emissiveIntensity={0.4}
             roughness={0.2}
-            metalness={0.9}
+            metalness={0.6}
           />
         </mesh>
       </group>
@@ -134,7 +134,7 @@ export const MiniatureEnvironment: React.FC<BaseLandmarkProps> = ({
         {/* Concrete Anchor Footing */}
         <mesh position={[0, 0.1, 0]}>
           <boxGeometry args={[0.35, 0.2, 0.35]} />
-          <meshStandardMaterial color="#1e293b" roughness={0.6} />
+          <meshStandardMaterial color="#6b645b" roughness={0.6} metalness={0.05} />
         </mesh>
 
         {/* Vertical Lattice Mast */}

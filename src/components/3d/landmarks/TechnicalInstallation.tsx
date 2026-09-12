@@ -82,24 +82,24 @@ export const TechnicalInstallation: React.FC<BaseLandmarkProps> = ({
       {/* 1. Heavy Cast-Iron Vibration Isolation Base */}
       <mesh position={[0, 0.15, 0]} receiveShadow castShadow>
         <cylinderGeometry args={[2.0, 2.3, 0.3, 16]} />
-        <meshStandardMaterial color="#0c1018" roughness={0.5} metalness={0.8} />
+        <meshStandardMaterial color="#8c8479" roughness={0.7} metalness={0.05} />
       </mesh>
 
       {/* Vibration-Damping Neoprene Pad Ring */}
       <mesh position={[0, 0.32, 0]}>
         <torusGeometry args={[1.7, 0.03, 8, 32]} />
-        <meshStandardMaterial color="#1e293b" roughness={0.8} />
+        <meshStandardMaterial color="#3b3734" roughness={0.8} />
       </mesh>
 
       {/* 2. Central Turret Pedestal & Ring Slew Bearing */}
       <mesh position={[0, 0.65, 0]} castShadow receiveShadow>
         <cylinderGeometry args={[1.1, 1.3, 0.6, 16]} />
-        <meshStandardMaterial color="#111726" roughness={0.4} metalness={0.85} />
+        <meshStandardMaterial color="#544e47" roughness={0.5} metalness={0.3} />
       </mesh>
 
       <mesh position={[0, 0.98, 0]}>
         <cylinderGeometry args={[0.9, 0.9, 0.08, 24]} />
-        <meshStandardMaterial color="#334155" roughness={0.2} metalness={0.95} />
+        <meshStandardMaterial color="#a8a29e" roughness={0.3} metalness={0.7} />
       </mesh>
 
       {/* 3. Articulated Optics & Sensor Gimbal Assembly */}
@@ -107,17 +107,17 @@ export const TechnicalInstallation: React.FC<BaseLandmarkProps> = ({
         {/* Gimbal Dual Yoke Arms */}
         <mesh position={[-0.7, 0.4, 0]} castShadow>
           <boxGeometry args={[0.15, 1.1, 0.35]} />
-          <meshStandardMaterial color="#1e293b" roughness={0.3} metalness={0.9} />
+          <meshStandardMaterial color="#3b3734" roughness={0.4} metalness={0.6} />
         </mesh>
         <mesh position={[0.7, 0.4, 0]} castShadow>
           <boxGeometry args={[0.15, 1.1, 0.35]} />
-          <meshStandardMaterial color="#1e293b" roughness={0.3} metalness={0.9} />
+          <meshStandardMaterial color="#3b3734" roughness={0.4} metalness={0.6} />
         </mesh>
 
         {/* Central Optics Barrel */}
         <mesh position={[0, 0.4, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
           <cylinderGeometry args={[0.55, 0.45, 1.2, 24]} />
-          <meshStandardMaterial color="#090d16" roughness={0.2} metalness={0.9} />
+          <meshStandardMaterial color="#262320" roughness={0.3} metalness={0.7} />
         </mesh>
 
         {/* Primary Aperture Lens Ring */}

@@ -64,13 +64,13 @@ export const LandmarkSubstructure: React.FC<LandmarkSubstructureProps> = ({
 
   return (
     <group>
-      {/* 1. Deep Sub-Terrain Footing (Massive architectural pylon anchored deep into bedrock) */}
+      {/* 1. Deep Sub-Terrain Footing (Massive warm architectural pylon anchored deep into bedrock) */}
       <mesh position={[0, -3.0, 0]} receiveShadow>
         <cylinderGeometry args={[2.7, 3.8, 6.0, 24]} />
         <meshStandardMaterial
-          color="#0d1420"
-          roughness={0.82}
-          metalness={0.15}
+          color="#544e47"
+          roughness={0.85}
+          metalness={0.04}
         />
       </mesh>
 
@@ -78,9 +78,9 @@ export const LandmarkSubstructure: React.FC<LandmarkSubstructureProps> = ({
       <mesh position={[0, -2.1, 0]} receiveShadow>
         <cylinderGeometry args={[3.8, 4.6, 0.6, 20]} />
         <meshStandardMaterial
-          color="#111826"
-          roughness={0.85}
-          metalness={0.12}
+          color="#6e665d"
+          roughness={0.82}
+          metalness={0.04}
         />
       </mesh>
 
@@ -93,15 +93,15 @@ export const LandmarkSubstructure: React.FC<LandmarkSubstructureProps> = ({
         decay={2}
       />
 
-      {/* 2. Terraced Architectural Exhibition Plaza Deck */}
+      {/* 2. Terraced Architectural Exhibition Plaza Deck (Warm Ivory Travertine) */}
       <group position={[0, -0.12, 0]}>
         {/* Foundation Deck Slabs */}
         <mesh position={[0, 0, 0]} receiveShadow castShadow>
           <cylinderGeometry args={[2.5, 2.7, 0.35, 32]} />
           <meshStandardMaterial
-            color="#111724"
-            roughness={0.8}
-            metalness={0.15}
+            color="#ded8ce"
+            roughness={0.68}
+            metalness={0.03}
           />
         </mesh>
 
@@ -116,23 +116,23 @@ export const LandmarkSubstructure: React.FC<LandmarkSubstructureProps> = ({
           />
         </mesh>
 
-        {/* Upper Finished Gallery Terrace Deck */}
+        {/* Upper Finished Gallery Terrace Deck (Ivory Honed Limestone) */}
         <mesh position={[0, 0.25, 0]} receiveShadow>
           <cylinderGeometry args={[2.2, 2.3, 0.16, 32]} />
           <meshStandardMaterial
-            color="#141c2c"
-            roughness={0.75}
-            metalness={0.15}
+            color="#f0ebe1"
+            roughness={0.62}
+            metalness={0.03}
           />
         </mesh>
 
-        {/* Observation Edge Chamfer Bead */}
+        {/* Observation Edge Chamfer Bead (Restrained Charcoal Bronze) */}
         <mesh position={[0, 0.34, 0]}>
           <torusGeometry args={[2.22, 0.012, 8, 48, Math.PI * 1.5]} />
           <meshStandardMaterial
-            color="#334155"
+            color="#3b3734"
             roughness={0.5}
-            metalness={0.4}
+            metalness={0.2}
           />
         </mesh>
       </group>

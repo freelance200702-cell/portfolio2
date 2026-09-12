@@ -249,42 +249,42 @@ export const PhysicalRoadbed: React.FC<PhysicalRoadbedProps> = ({
 
   return (
     <group>
-      {/* 1. Navigable Basalt Roadbed Deck with Physical Surface Texture */}
+      {/* 1. Navigable Warm Stone Roadbed Deck with Physical Surface Texture */}
       <mesh geometry={deckGeometry} receiveShadow castShadow>
         <meshStandardMaterial
           map={diffuseMap}
           roughnessMap={roughnessMap}
-          color="#18202e"
-          roughness={0.86}
-          metalness={0.08}
+          color="#ded8ce"
+          roughness={0.72}
+          metalness={0.03}
           bumpScale={0.02}
         />
       </mesh>
 
-      {/* 2. Left Precast Architectural Curb */}
+      {/* 2. Left Precast Architectural Curb (Restrained Charcoal Stone) */}
       <mesh geometry={leftCurbGeom} receiveShadow castShadow>
         <meshStandardMaterial
-          color="#283344"
-          roughness={0.82}
-          metalness={0.1}
+          color="#3b3734"
+          roughness={0.65}
+          metalness={0.08}
         />
       </mesh>
 
-      {/* 3. Right Precast Architectural Curb */}
+      {/* 3. Right Precast Architectural Curb (Restrained Charcoal Stone) */}
       <mesh geometry={rightCurbGeom} receiveShadow castShadow>
         <meshStandardMaterial
-          color="#283344"
-          roughness={0.82}
-          metalness={0.1}
+          color="#3b3734"
+          roughness={0.65}
+          metalness={0.08}
         />
       </mesh>
 
-      {/* 4. Structural Under-Deck Box Girder (Deep cast shadows and physical depth) */}
+      {/* 4. Structural Under-Deck Box Girder (Sharp Structural Depth) */}
       <mesh geometry={keelGeometry} receiveShadow castShadow>
         <meshStandardMaterial
-          color="#0d121c"
-          roughness={0.9}
-          metalness={0.15}
+          color="#2c2825"
+          roughness={0.78}
+          metalness={0.08}
         />
       </mesh>
     </group>

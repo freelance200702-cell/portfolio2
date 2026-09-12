@@ -284,3 +284,58 @@ export function createRailCurve(
 
   return new THREE.CatmullRomCurve3(points, false, 'centripetal', 0.5);
 }
+
+export interface CurveMetrics {
+  startPoint: THREE.Vector3;
+  endPoint: THREE.Vector3;
+  minZ: number;
+  maxZ: number;
+  totalLength: number;
+}
+
+export function getCurveMetrics(curve: THREE.CatmullRomCurve3): CurveMetrics {
+  const startPoint = curve.getPointAt(0);
+  const endPoint = curve.getPointAt(1);
+  const minZ = Math.min(startPoint.z, endPoint.z);
+  const maxZ = Math.max(startPoint.z, endPoint.z);
+  const totalLength = curve.getLength();
+  return { startPoint, endPoint, minZ, maxZ, totalLength };
+}
+
+/**
+ * Samples a continuous reference frame along the curve, with linear extrapolation
+ * beyond [0, 1] along the boundary tangents so environment scenery can extend
+ * seamlessly before the departure threshold and beyond the terminal horizon.
+ */
+export function sampleExtendedCurveFrame(curve: THREE.CatmullRomCurve3, t: number): CurveFrame {
+  if (t >= 0 && t <= 1) {
+    return sampleCurveFrame(curve, t);
+  }
+
+  const totalLength = curve.getLength();
+
+  if (t < 0) {
+    const frame0 = sampleCurveFrame(curve, 0.0001);
+    const distance = t * totalLength;
+    const extrapolatedPos = frame0.position.clone().addScaledVector(frame0.tangent, distance);
+    return {
+      position: extrapolatedPos,
+      tangent: frame0.tangent.clone(),
+      normal: frame0.normal.clone(),
+      binormal: frame0.binormal.clone(),
+      bankAngle: 0,
+    };
+  } else {
+    const frame1 = sampleCurveFrame(curve, 0.9999);
+    const distance = (t - 1.0) * totalLength;
+    const extrapolatedPos = frame1.position.clone().addScaledVector(frame1.tangent, distance);
+    return {
+      position: extrapolatedPos,
+      tangent: frame1.tangent.clone(),
+      normal: frame1.normal.clone(),
+      binormal: frame1.binormal.clone(),
+      bankAngle: 0,
+    };
+  }
+}
+

@@ -49,10 +49,10 @@ export const AtmosphericSky: React.FC = () => {
 
   const uniforms = useMemo(
     () => ({
-      uZenithColor: { value: new THREE.Color('#060b18') },   // Deep celestial indigo
-      uMidColor: { value: new THREE.Color('#142238') },      // Mid-sky slate
-      uHorizonColor: { value: new THREE.Color('#2c4060') },  // Luminous twilight titanium horizon
-      uNadirColor: { value: new THREE.Color('#090e1a') },    // Ground nadir
+      uZenithColor: { value: new THREE.Color('#1d2d44') },   // Refined, desaturated cool slate blue
+      uMidColor: { value: new THREE.Color('#415a77') },      // Luminous mid-sky slate
+      uHorizonColor: { value: new THREE.Color('#a3b8cc') },  // Luminous pearlescent horizon band
+      uNadirColor: { value: new THREE.Color('#524a42') },    // Ground terrestrial reflection
     }),
     []
   );

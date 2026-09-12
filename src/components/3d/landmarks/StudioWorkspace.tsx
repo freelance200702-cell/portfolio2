@@ -58,47 +58,47 @@ export const StudioWorkspace: React.FC<BaseLandmarkProps> = ({
 
   return (
     <group position={[0, 0, 0]}>
-      {/* 1. Heavy Industrial Floor Tile Foundation */}
+      {/* 1. Heavy Warm Stone Floor Foundation */}
       <mesh position={[0, 0.12, 0]} receiveShadow castShadow>
         <boxGeometry args={[3.8, 0.24, 3.2]} />
-        <meshStandardMaterial color="#0c101a" roughness={0.6} metalness={0.7} />
+        <meshStandardMaterial color="#8c8479" roughness={0.7} metalness={0.04} />
       </mesh>
 
       {/* 2. Steel Drafting Worktable (Heavy trestle frame) */}
       <group position={[0, 0.24, 0]}>
-        {/* Table Top Slab (Dark smoked glass / composite) */}
+        {/* Table Top Slab (Warm composite slate) */}
         <mesh ref={draftingSurfaceRef} position={[0, 0.9, 0]} castShadow receiveShadow>
           <boxGeometry args={[2.4, 0.08, 1.4]} />
           <meshStandardMaterial
-            color="#090d16"
+            color="#2e2a26"
             emissive={primaryColor}
-            emissiveIntensity={0.3}
-            roughness={0.15}
-            metalness={0.9}
+            emissiveIntensity={0.2}
+            roughness={0.4}
+            metalness={0.2}
           />
         </mesh>
 
         {/* Framing Bevel Trim */}
         <mesh position={[0, 0.9, 0]}>
           <boxGeometry args={[2.44, 0.06, 1.44]} />
-          <meshStandardMaterial color="#1e293b" roughness={0.3} metalness={0.9} />
+          <meshStandardMaterial color="#3b3734" roughness={0.4} metalness={0.6} />
         </mesh>
 
-        {/* Trestle Legs (Cold-rolled steel channels) */}
+        {/* Trestle Legs (Architectural charcoal bronze channels) */}
         {/* Left Leg A-Frame */}
         <mesh position={[-1.0, 0.45, 0]} castShadow>
           <boxGeometry args={[0.1, 0.9, 1.2]} />
-          <meshStandardMaterial color="#1e293b" roughness={0.4} metalness={0.85} />
+          <meshStandardMaterial color="#3b3734" roughness={0.4} metalness={0.6} />
         </mesh>
         {/* Right Leg A-Frame */}
         <mesh position={[1.0, 0.45, 0]} castShadow>
           <boxGeometry args={[0.1, 0.9, 1.2]} />
-          <meshStandardMaterial color="#1e293b" roughness={0.4} metalness={0.85} />
+          <meshStandardMaterial color="#3b3734" roughness={0.4} metalness={0.6} />
         </mesh>
         {/* Center Cross Stretcher */}
         <mesh position={[0, 0.35, 0]} rotation={[0, 0, Math.PI / 2]}>
           <cylinderGeometry args={[0.04, 0.04, 2.0, 8]} />
-          <meshStandardMaterial color="#334155" metalness={0.9} />
+          <meshStandardMaterial color="#57534e" metalness={0.8} />
         </mesh>
       </group>
 

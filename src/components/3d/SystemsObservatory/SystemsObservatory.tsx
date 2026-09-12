@@ -96,36 +96,36 @@ export const SystemsObservatory: React.FC<SystemsObservatoryProps> = ({ curve })
 
   return (
     <group position={transform.position} quaternion={transform.quaternion}>
-      {/* 1. Milled Dark Titanium Circular Observatory Dais */}
+      {/* 1. Milled Warm Travertine Circular Observatory Dais */}
       <mesh position={[0, -0.05, 0]}>
         <cylinderGeometry args={[11.5, 12.0, 0.15, 48]} />
         <meshStandardMaterial
-          color="#050508"
-          roughness={0.3}
-          metalness={0.92}
+          color="#ded8ce"
+          roughness={0.65}
+          metalness={0.04}
         />
       </mesh>
 
-      {/* 2. Concentric Luminous Floor Seams */}
+      {/* 2. Concentric Luminous Floor Seams (Warm Amber and Stone Inlays) */}
       <mesh position={[0, 0.03, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[6.5, 6.55, 64]} />
-        <meshBasicMaterial color="#38bdf8" transparent opacity={0.3} />
+        <meshBasicMaterial color="#d97706" transparent opacity={0.4} />
       </mesh>
       <mesh position={[0, 0.03, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[10.5, 10.54, 64]} />
-        <meshBasicMaterial color="#64748b" transparent opacity={0.2} />
+        <meshBasicMaterial color="#8c8479" transparent opacity={0.35} />
       </mesh>
 
       {/* 3. Overhead Observatory Canopy Arch */}
       <group position={[0, 0, 0]}>
         <mesh position={[0, 5.5, 0]}>
           <torusGeometry args={[8.5, 0.05, 8, 48, Math.PI]} />
-          <meshBasicMaterial color="#38bdf8" transparent opacity={0.4} />
+          <meshBasicMaterial color="#fef3c7" transparent opacity={0.7} />
         </mesh>
         <Text
           position={[0, 5.8, 0]}
           fontSize={0.28}
-          color="#f8fafc"
+          color="#262320"
           anchorX="center"
           anchorY="middle"
           font={JETBRAINS_MONO_FONT}
@@ -134,26 +134,26 @@ export const SystemsObservatory: React.FC<SystemsObservatoryProps> = ({ curve })
         </Text>
       </group>
 
-      {/* 4. Central Engineering Philosophy Core Monolith */}
+      {/* 4. Central Engineering Philosophy Core Monolith (Charcoal Basalt Stele) */}
       <group position={[0, 0, 4.5]}>
         <mesh position={[0, 1.2, 0]}>
           <boxGeometry args={[2.2, 2.4, 0.35]} />
           <meshStandardMaterial
-            color="#08080f"
-            roughness={0.2}
-            metalness={0.95}
+            color="#262320"
+            roughness={0.45}
+            metalness={0.15}
           />
         </mesh>
-        {/* Glowing Monolith Border */}
+        {/* Monolith Border */}
         <lineSegments position={[0, 1.2, 0]}>
           <edgesGeometry args={[new THREE.BoxGeometry(2.22, 2.42, 0.36)]} />
-          <lineBasicMaterial color="#38bdf8" transparent opacity={0.6} />
+          <lineBasicMaterial color="#d97706" transparent opacity={0.6} />
         </lineSegments>
 
         <Text
           position={[0, 2.1, 0.2]}
           fontSize={0.11}
-          color="#38bdf8"
+          color="#f59e0b"
           anchorX="center"
           anchorY="middle"
           font={JETBRAINS_MONO_FONT}
@@ -175,7 +175,7 @@ export const SystemsObservatory: React.FC<SystemsObservatoryProps> = ({ curve })
           fontSize={0.075}
           maxWidth={1.9}
           textAlign="center"
-          color="#94a3b8"
+          color="#d6d3d1"
           anchorX="center"
           anchorY="middle"
           lineHeight={1.35}
@@ -207,13 +207,13 @@ export const SystemsObservatory: React.FC<SystemsObservatoryProps> = ({ curve })
               selectDiscipline(isSelected ? null : discipline.id);
             }}
           >
-            {/* Hexagonal Titanium Pedestal Base */}
+            {/* Hexagonal Warm Architectural Stone Pedestal Base */}
             <mesh position={[0, 0.45, 0]}>
               <cylinderGeometry args={[0.9, 1.05, 0.9, 6]} />
               <meshStandardMaterial
-                color="#0a0a12"
-                roughness={0.25}
-                metalness={0.9}
+                color="#8c8479"
+                roughness={0.65}
+                metalness={0.04}
               />
             </mesh>
 
